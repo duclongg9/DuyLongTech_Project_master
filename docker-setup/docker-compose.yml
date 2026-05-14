@@ -1,0 +1,47 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: duylongtech_db
+    environment:
+      MYSQL_DATABASE: duylongtech_db
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: ../docker-setup/backend.Dockerfile
+    container_name: duylongtech_backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/duylongtech_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_FLYWAY_USER=root
+      - SPRING_FLYWAY_PASSWORD=root
+    volumes:
+      - ../backend:/app
+      - ~/.m2:/root/.m2
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: ../docker-setup/frontend.Dockerfile
+    container_name: duylongtech_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:

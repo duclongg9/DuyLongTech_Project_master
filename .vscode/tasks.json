@@ -1,0 +1,49 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "🐳 Docker: Up (Build & Run)",
+            "type": "shell",
+            "command": "docker-compose -f docker-setup/docker-compose.yml up --build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🐳 Docker: Down",
+            "type": "shell",
+            "command": "docker-compose -f docker-setup/docker-compose.yml down",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🐳 Docker: Clean Up (Delete All Data)",
+            "type": "shell",
+            "command": "docker-compose -f docker-setup/docker-compose.yml down -v",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "🐳 Docker: View Logs (Backend)",
+            "type": "shell",
+            "command": "docker-compose -f docker-setup/docker-compose.yml logs -f backend",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        }
+    ]
+}

@@ -1,0 +1,448 @@
+/* ======================================================
+   KIOSK APP — Full-screen Touchscreen UI
+   ====================================================== */
+
+.kiosk {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0B1120 0%, #0F172A 100%);
+  color: #E8E8ED;
+  font-family: 'Inter', -apple-system, sans-serif;
+  padding-bottom: 100px;
+}
+.kiosk-header {
+  display: flex;
+  align-items: center;
+  padding: 20px 32px;
+  background: rgba(15,23,42,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(6,182,212,0.15);
+  position: sticky; top: 0; z-index: 50;
+}
+.kiosk-logo {
+  font-size: 1.3rem; font-weight: 800; color: #fff; cursor: pointer;
+}
+.kiosk-logo span { color: #06B6D4; }
+.kiosk-title {
+  flex: 1; text-align: center; font-size: 1rem; font-weight: 600; color: #94A3B8;
+}
+.kiosk-cart-btn {
+  background: rgba(6,182,212,0.12); padding: 10px 18px; border-radius: 12px;
+  font-size: 1.1rem; cursor: pointer; position: relative;
+}
+.kiosk-cart-count {
+  background: #EF4444; color: #fff; font-size: 0.7rem; font-weight: 800;
+  padding: 2px 7px; border-radius: 10px; position: absolute; top: -4px; right: -4px;
+}
+
+/* Browse */
+.kiosk-browse { padding: 24px 32px; }
+.kiosk-section-title {
+  text-align: center; font-size: 1.6rem; font-weight: 800; margin-bottom: 28px;
+  background: linear-gradient(135deg, #fff, #06B6D4);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.kiosk-product-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+.kiosk-product-card {
+  background: #1E293B; border-radius: 16px; overflow: hidden;
+  border: 2px solid transparent; cursor: pointer;
+  transition: all 0.2s ease;
+}
+.kiosk-product-card:hover, .kiosk-product-card:active {
+  border-color: #06B6D4; transform: scale(1.02);
+  box-shadow: 0 8px 32px rgba(6,182,212,0.2);
+}
+.kpc-img { height: 180px; overflow: hidden; background: #0F172A; }
+.kpc-img img { width: 100%; height: 100%; object-fit: cover; }
+.kpc-body { padding: 16px; }
+.kpc-body h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; }
+.kpc-specs { font-size: 0.85rem; color: #94A3B8; margin-bottom: 8px; }
+.kpc-price { font-size: 1.3rem; font-weight: 800; color: #06B6D4; }
+
+/* Config */
+.kiosk-config { padding: 24px 32px; max-width: 700px; margin: 0 auto; }
+.kiosk-back-btn {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  color: #94A3B8; padding: 10px 18px; border-radius: 10px; font-size: 0.9rem;
+  cursor: pointer; margin-bottom: 16px; font-family: inherit;
+}
+.kiosk-config h2 { font-size: 1.5rem; font-weight: 800; }
+.kiosk-desc { color: #94A3B8; font-size: 0.9rem; margin: 4px 0 24px; }
+.kiosk-opt-label { font-size: 1.1rem; margin: 20px 0 12px; font-weight: 700; }
+
+.kiosk-option-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.kiosk-option-card {
+  background: #1E293B; border: 2px solid rgba(255,255,255,0.08); border-radius: 14px;
+  padding: 24px 16px; text-align: center; cursor: pointer;
+  transition: all 0.15s;
+}
+.kiosk-option-card:active { transform: scale(0.96); }
+.kiosk-option-card.active {
+  border-color: #06B6D4; background: rgba(6,182,212,0.1);
+  box-shadow: 0 0 20px rgba(6,182,212,0.15);
+}
+.koc-value { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; }
+.koc-price { font-size: 0.85rem; color: #94A3B8; }
+.kiosk-option-card.active .koc-price { color: #06B6D4; }
+
+.kiosk-total-bar {
+  display: flex; align-items: center; gap: 16px;
+  margin-top: 32px; padding: 20px 24px;
+  background: #1E293B; border-radius: 16px;
+}
+.ktb-price { font-size: 1.8rem; font-weight: 800; color: #06B6D4; flex: 1; }
+.kiosk-cta {
+  padding: 18px 36px; background: linear-gradient(135deg, #F59E0B, #D97706);
+  color: #1D1D1F; border: none; border-radius: 14px; font-size: 1.1rem;
+  font-weight: 800; cursor: pointer; font-family: inherit;
+  transition: transform 0.15s;
+  box-shadow: 0 4px 20px rgba(245,158,11,0.3);
+}
+.kiosk-cta:active { transform: scale(0.96); }
+
+/* Cart */
+.kiosk-cart { padding: 24px 32px; max-width: 700px; margin: 0 auto; }
+.kiosk-cart h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 16px; }
+.kiosk-empty { text-align: center; color: #64748B; font-size: 1rem; margin: 60px 0; }
+
+.kiosk-cart-item {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 20px; background: #1E293B; border-radius: 12px;
+  margin-bottom: 10px;
+}
+.kci-info { flex: 1; }
+.kci-info h4 { font-weight: 700; margin-bottom: 2px; }
+.kci-info p { font-size: 0.85rem; color: #94A3B8; }
+.kci-price { font-size: 1.1rem; font-weight: 700; color: #06B6D4; }
+.kci-remove {
+  background: rgba(239,68,68,0.12); color: #EF4444; border: none;
+  width: 36px; height: 36px; border-radius: 8px; font-size: 1rem;
+  cursor: pointer;
+}
+
+.kiosk-cart-total {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 20px; background: rgba(6,182,212,0.08); border-radius: 12px;
+  margin: 16px 0; font-size: 1.3rem; font-weight: 800;
+}
+
+.kiosk-checkout-form { margin: 16px 0; }
+.kiosk-input {
+  display: block; width: 100%; padding: 16px 18px;
+  background: #0F172A; border: 1.5px solid #334155; border-radius: 12px;
+  color: #E8E8ED; font-size: 1rem; font-family: inherit;
+  margin-bottom: 10px; box-sizing: border-box;
+}
+.kiosk-input:focus { outline: none; border-color: #06B6D4; }
+
+.kiosk-submit-cta {
+  display: block; width: 100%; padding: 22px;
+  background: linear-gradient(135deg, #EF4444, #DC2626);
+  color: #fff; border: none; border-radius: 16px;
+  font-size: 1.3rem; font-weight: 900; cursor: pointer;
+  font-family: inherit; margin-top: 12px;
+  animation: pulse-glow 2s ease-in-out infinite;
+  box-shadow: 0 6px 30px rgba(239,68,68,0.3);
+}
+.kiosk-submit-cta:disabled { opacity: 0.5; animation: none; }
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 6px 30px rgba(239,68,68,0.3); }
+  50% { box-shadow: 0 6px 40px rgba(239,68,68,0.6); }
+}
+.kiosk-hint { text-align: center; color: #64748B; font-size: 0.85rem; margin-top: 12px; }
+
+/* Done */
+.kiosk-done {
+  text-align: center; padding: 80px 32px;
+}
+.kiosk-done-icon { font-size: 5rem; margin-bottom: 16px; }
+.kiosk-done h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 16px; }
+.kiosk-order-id {
+  font-size: 1.3rem; padding: 12px 24px; background: rgba(6,182,212,0.12);
+  border-radius: 12px; display: inline-block; margin-bottom: 16px;
+}
+.kiosk-order-id strong { color: #06B6D4; }
+.kiosk-done-msg { color: #94A3B8; font-size: 1rem; line-height: 1.6; margin-bottom: 32px; }
+
+/* ======================================================
+   TABLET POS — Staff Order Management
+   ====================================================== */
+
+.tablet-pos {
+  min-height: 100vh; background: #0B1120; color: #E8E8ED;
+  font-family: 'Inter', sans-serif;
+}
+.pos-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 24px; background: #1E293B;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  position: sticky; top: 0; z-index: 50;
+}
+.pos-back {
+  background: rgba(255,255,255,0.08); border: none; color: #fff;
+  width: 38px; height: 38px; border-radius: 10px; font-size: 1.1rem; cursor: pointer;
+}
+.pos-header h1 { flex: 1; font-size: 1.1rem; font-weight: 700; }
+.pos-status { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #34C759; }
+.pos-ws-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: #34C759;
+  box-shadow: 0 0 8px #34C759; animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+
+/* Modal */
+.pos-modal-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100; padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+.pos-modal {
+  background: #1E293B; border-radius: 20px; width: 100%; max-width: 460px;
+  overflow: hidden; border: 1px solid rgba(6,182,212,0.2);
+  animation: slideUp 0.3s ease;
+}
+@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } }
+.pos-modal-header {
+  background: linear-gradient(135deg, #EF4444, #DC2626);
+  padding: 20px; text-align: center; color: #fff;
+}
+.pos-alert-icon { font-size: 2rem; display: block; margin-bottom: 4px; }
+.pos-modal-header h2 { font-size: 1.1rem; font-weight: 800; }
+.pos-modal-body { padding: 20px; }
+.pos-order-id {
+  text-align: center; font-size: 1.3rem; font-weight: 800;
+  color: #06B6D4; margin-bottom: 4px;
+}
+.pos-order-time { text-align: center; font-size: 0.85rem; color: #64748B; margin-bottom: 16px; }
+.pos-customer {
+  display: flex; justify-content: space-between;
+  padding: 10px 14px; background: rgba(0,0,0,0.2); border-radius: 10px;
+  font-size: 0.9rem; margin-bottom: 12px;
+}
+.pos-items { margin-bottom: 12px; }
+.pos-item {
+  padding: 10px 14px; background: rgba(6,182,212,0.06); border-radius: 8px;
+  margin-bottom: 6px;
+}
+.pos-item-name { font-weight: 700; font-size: 0.95rem; }
+.pos-item-config { font-size: 0.8rem; color: #94A3B8; }
+.pos-item-price { font-weight: 700; color: #06B6D4; text-align: right; }
+.pos-total {
+  display: flex; justify-content: space-between;
+  padding: 12px 14px; background: rgba(6,182,212,0.1); border-radius: 10px;
+  font-size: 1.2rem; font-weight: 800;
+}
+.pos-modal-actions { display: flex; flex-direction: column; gap: 8px; padding: 0 20px 20px; }
+.pos-btn-print {
+  width: 100%; padding: 16px; background: linear-gradient(135deg, #34C759, #22C55E);
+  color: #fff; border: none; border-radius: 12px; font-size: 1.05rem;
+  font-weight: 800; cursor: pointer; font-family: inherit;
+}
+.pos-btn-print:active { transform: scale(0.97); }
+.pos-btn-dismiss {
+  width: 100%; padding: 12px; background: transparent;
+  color: #64748B; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+  font-size: 0.9rem; cursor: pointer; font-family: inherit;
+}
+
+/* Orders List */
+.pos-orders { padding: 20px 24px; }
+.pos-section-title { font-size: 1rem; font-weight: 700; margin-bottom: 12px; color: #CBD5E1; }
+.pos-empty { text-align: center; padding: 60px 20px; }
+.pos-empty-icon { font-size: 3rem; margin-bottom: 12px; }
+.pos-empty p { color: #94A3B8; }
+.pos-empty-sub { font-size: 0.8rem; color: #64748B; margin-top: 4px; }
+
+.pos-order-card {
+  background: #1E293B; border-radius: 14px; padding: 16px; margin-bottom: 10px;
+  border-left: 4px solid #334155;
+}
+.pos-order-card.pending { border-left-color: #F59E0B; }
+.poc-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.poc-id { font-weight: 700; font-size: 0.95rem; }
+.poc-status {
+  padding: 2px 10px; border-radius: 6px; font-size: 0.72rem;
+  font-weight: 700; text-transform: uppercase;
+}
+.poc-status.pending { background: rgba(245,158,11,0.15); color: #F59E0B; }
+.poc-time { margin-left: auto; font-size: 0.8rem; color: #64748B; }
+.poc-customer { font-size: 0.85rem; color: #94A3B8; margin-bottom: 8px; }
+.poc-items { margin-bottom: 8px; }
+.poc-item {
+  display: flex; justify-content: space-between;
+  padding: 6px 0; font-size: 0.85rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.poc-footer {
+  display: flex; justify-content: space-between; align-items: center; margin-top: 8px;
+}
+.poc-total { font-weight: 700; color: #06B6D4; }
+.pos-btn-sm {
+  padding: 8px 14px; background: rgba(6,182,212,0.12); color: #06B6D4;
+  border: none; border-radius: 8px; font-size: 0.8rem; font-weight: 600;
+  cursor: pointer; font-family: inherit;
+}
+
+/* Kiosk Account Box (Done screen) */
+.kiosk-account-box {
+  background: rgba(6,182,212,0.08); border: 1px solid rgba(6,182,212,0.2);
+  border-radius: 14px; padding: 20px; margin: 20px auto; max-width: 400px;
+  text-align: left;
+}
+.kiosk-account-box h3 { font-size: 1.1rem; margin-bottom: 6px; text-align: center; }
+.kiosk-account-box > p { text-align: center; font-size: 0.85rem; color: #94A3B8; margin-bottom: 12px; }
+.kiosk-cred {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 14px; background: rgba(0,0,0,0.3); border-radius: 8px;
+  margin-bottom: 6px; font-size: 0.95rem;
+}
+.kiosk-cred span { color: #94A3B8; }
+.kiosk-cred strong { color: #06B6D4; font-family: 'Courier New', monospace; font-size: 1.1rem; letter-spacing: 1px; }
+.kiosk-cred-note { text-align: center; font-size: 0.8rem; color: #FFB84D; margin-top: 8px; }
+
+/* ======================================================
+   @media print — Biên lai A5 (148mm × 210mm)
+   ====================================================== */
+
+.print-receipt { display: none; }
+
+@media print {
+  /* Ẩn toàn bộ UI, chỉ giữ biên lai */
+  body * { visibility: hidden !important; }
+  .print-receipt, .print-receipt * { visibility: visible !important; }
+
+  .print-receipt {
+    display: block !important;
+    position: fixed; top: 0; left: 0;
+    width: 138mm;
+    padding: 5mm;
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
+    font-size: 10pt !important;
+    color: #000 !important;
+    background: #fff !important;
+    line-height: 1.5;
+  }
+
+  @page {
+    size: A5 portrait;
+    margin: 5mm;
+  }
+
+  /* Header */
+  .a5-header { text-align: center; margin-bottom: 3mm; }
+  .a5-logo h1 {
+    font-size: 18pt; font-weight: 900; margin: 0;
+    letter-spacing: 2px; color: #000;
+  }
+  .a5-slogan { font-size: 8pt; color: #555; margin: 1mm 0 2mm; }
+  .a5-shop-info p { font-size: 8pt; margin: 0.5mm 0; color: #333; }
+
+  /* Dividers */
+  .a5-divider {
+    border: none; border-top: 1px solid #ccc;
+    margin: 3mm 0;
+  }
+  .a5-divider-double {
+    border: none; border-top: 2px double #333;
+    margin: 3mm 0;
+  }
+
+  /* Title */
+  .a5-title {
+    text-align: center; font-size: 14pt; font-weight: 900;
+    margin: 2mm 0 1mm; text-transform: uppercase;
+    letter-spacing: 3px;
+  }
+  .a5-subtitle {
+    text-align: center; font-size: 9pt; color: #555; margin: 0 0 2mm;
+  }
+
+  /* Sections */
+  .a5-section { margin: 2mm 0; }
+  .a5-section h3 {
+    font-size: 10pt; font-weight: 700; margin: 0 0 2mm;
+    padding-bottom: 1mm; border-bottom: 1px solid #ddd;
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+
+  /* Info Table */
+  .a5-info-table { width: 100%; border-collapse: collapse; margin: 1mm 0; }
+  .a5-info-table td { padding: 1mm 2mm; font-size: 9pt; vertical-align: top; }
+  .a5-label { font-weight: 600; color: #555; width: 30%; }
+
+  /* Product Table */
+  .a5-product-table {
+    width: 100%; border-collapse: collapse; margin: 2mm 0;
+  }
+  .a5-product-table th {
+    background: #f0f0f0; padding: 2mm 3mm; font-size: 8pt;
+    font-weight: 700; text-align: left; border-bottom: 1.5px solid #999;
+    text-transform: uppercase;
+  }
+  .a5-product-table td {
+    padding: 2mm 3mm; font-size: 9pt; border-bottom: 0.5px solid #ddd;
+  }
+  .a5-product-table .center { text-align: center; }
+  .a5-product-table .right { text-align: right; }
+  .a5-total-row td {
+    border-top: 1.5px solid #333 !important; border-bottom: none !important;
+    padding-top: 3mm !important; font-size: 11pt !important;
+  }
+
+  /* Warranty */
+  .a5-warranty-terms {
+    margin-top: 2mm; padding: 2mm 3mm;
+    background: #f8f8f8; border-radius: 2mm;
+    font-size: 8pt;
+  }
+  .a5-warranty-terms p { margin: 0 0 1mm; }
+  .a5-warranty-terms ul {
+    margin: 1mm 0; padding-left: 4mm; list-style: none;
+  }
+  .a5-warranty-terms li { margin: 0.5mm 0; font-size: 8pt; }
+
+  /* Account Section */
+  .a5-account-desc { font-size: 8pt; color: #555; margin: 1mm 0; }
+  .a5-account-features {
+    list-style: none; padding: 0; margin: 1mm 0 2mm;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1mm;
+  }
+  .a5-account-features li { font-size: 8pt; }
+  .a5-account-box {
+    border: 1.5px solid #333; border-radius: 2mm;
+    padding: 3mm; margin: 2mm 0;
+    background: #f5f5f5;
+  }
+  .a5-account-row {
+    display: flex; justify-content: space-between;
+    padding: 1mm 0; font-size: 9pt;
+  }
+  .a5-acc-label { font-weight: 600; color: #333; }
+  .a5-acc-value { font-weight: 700; }
+  .a5-mono { font-family: 'Courier New', monospace; font-size: 11pt; letter-spacing: 1.5px; }
+  .a5-acc-note {
+    font-size: 7.5pt; color: #777; margin-top: 2mm;
+    text-align: center; font-style: italic;
+  }
+
+  /* Footer */
+  .a5-footer { margin-top: 3mm; }
+  .a5-signature-row {
+    display: flex; justify-content: space-between; gap: 10mm;
+    margin-bottom: 3mm;
+  }
+  .a5-sig-col { flex: 1; text-align: center; }
+  .a5-sig-title { font-size: 9pt; font-weight: 700; margin: 0; }
+  .a5-sig-sub { font-size: 7pt; color: #777; font-style: italic; margin: 0.5mm 0; }
+  .a5-sig-space {
+    height: 18mm; border-bottom: 1px dotted #999;
+    margin-top: 2mm;
+  }
+  .a5-thanks { text-align: center; margin-top: 3mm; }
+  .a5-thanks p { font-size: 9pt; font-weight: 700; margin: 0; }
+  .a5-thanks-sub { font-size: 7pt !important; font-weight: 400 !important; color: #777; }
+}
