@@ -37,16 +37,16 @@ public class ChatAIService {
     public Map<String, Object> consultFromSurvey(long budgetMax, String purpose, String gameLevel, String priority) {
 
         List<Product> available = productRepository.findAll().stream()
-                .filter(p -> "AVAILABLE".equals(p.getStatus()))
+                .filter(p -> Boolean.TRUE.equals(p.getInStock()))
                 .collect(Collectors.toList());
 
         // Tạo bảng sản phẩm dạng text rõ ràng cho AI
         StringBuilder inventory = new StringBuilder();
         for (Product p : available) {
             inventory.append(String.format(
-                "| ID:%d | %s | %s | %s | RAM %s | GPU: %s | Giá: %s VNĐ | BH: %d tháng | Tình trạng: %s |\n",
+                "| ID:%d | %s | %s | %s | RAM %s | GPU: %s | Giá: %s VNĐ | Tình trạng: %s |\n",
                 p.getId(), p.getName(), p.getBrand(), p.getCpuModel(), p.getRamAmount(),
-                p.getGpuName(), p.getBasePrice(), p.getWarrantyMonths() != null ? p.getWarrantyMonths() : 0,
+                p.getGpuName(), p.getBasePrice(),
                 p.getCondition() != null ? p.getCondition() : "N/A"
             ));
         }
@@ -83,7 +83,7 @@ public class ChatAIService {
             "(Giới thiệu 1-3 máy phù hợp nhất từ danh sách kho, giải thích ngắn tại sao mỗi máy phù hợp. " +
             "Mỗi máy trên 1 dòng, bắt đầu bằng dấu - . Ghi rõ tên máy, CPU, RAM, giá.)\n\n" +
             "## Lưu ý khi mua\n" +
-            "(2-3 gạch đầu dòng lời khuyên thực tế: nâng cấp RAM, chọn SSD, kiểm tra bảo hành...)\n\n" +
+            "(2-3 gạch đầu dòng lời khuyên thực tế: nâng cấp RAM, chọn SSD, kiểm tra kỹ tình trạng...)\n\n" +
             "Dòng cuối cùng BẮT BUỘC ghi: [MATCHED_IDS: x, y, z] " +
             "(thay x, y, z bằng ID sản phẩm đã đề xuất, tối đa 3 ID, chỉ chọn từ danh sách kho trên).\n" +
             "Nếu không có máy phù hợp ngân sách, vẫn ghi [MATCHED_IDS: ] và giải thích lý do.\n" +
@@ -135,7 +135,6 @@ public class ChatAIService {
             "- Màn hình: " + p.getDisplaySize() + " " + (p.getDisplayRes() != null ? p.getDisplayRes() : "") + " " + (p.getDisplayPanel() != null ? p.getDisplayPanel() : "") + "\n" +
             "- GPU: " + (p.getGpuName() != null ? p.getGpuName() : "Intel Integrated") + "\n" +
             "- Tình trạng: " + conditionVi + "\n" +
-            "- Bảo hành: " + (p.getWarrantyMonths() != null ? p.getWarrantyMonths() : 0) + " tháng tại DuyLongTech\n" +
             "- Giá: " + (Boolean.TRUE.equals(p.getCallForPrice()) ? "Liên hệ" : 
                 (p.getBasePrice() != null ? String.format("%,d VNĐ", p.getBasePrice().longValue()) : "Liên hệ")) + "\n\n" +
             "YÊU CẦU OUTPUT (tuân thủ chính xác cấu trúc sau):\n\n" +
@@ -145,13 +144,13 @@ public class ChatAIService {
             "(Viết Meta Description 120-155 ký tự, tóm tắt ưu điểm chính: cấu hình, giá, bảo hành)\n\n" +
             "[ARTICLE]\n" +
             "# (Tiêu đề h1 - chứa tên sản phẩm)\n\n" +
-            "(Đoạn mở đầu 2-3 câu giới thiệu sản phẩm, nhấn mạnh tình trạng máy và bảo hành)\n\n" +
+            "(Đoạn mở đầu 2-3 câu giới thiệu sản phẩm, nhấn mạnh tình trạng máy)\n\n" +
             "## Thông số kỹ thuật chi tiết\n" +
             "(Liệt kê thông số dạng gạch đầu dòng: CPU, RAM, SSD, Màn hình, GPU, Pin, Cổng kết nối)\n\n" +
             "## Đánh giá hiệu năng thực tế\n" +
             "(2-3 đoạn ngắn phân tích CPU, GPU phù hợp tác vụ gì. Viết thực tế, không phóng đại)\n\n" +
             "## Tại sao nên mua tại DuyLongTech?\n" +
-            "(3-4 gạch đầu dòng: bảo hành " + (p.getWarrantyMonths() != null ? p.getWarrantyMonths() : 0) + " tháng, kiểm tra kỹ, hỗ trợ kỹ thuật, freeship)\n\n" +
+            "(3-4 gạch đầu dòng: kiểm tra kỹ, hỗ trợ kỹ thuật, freeship)\n\n" +
             "## Câu hỏi thường gặp (FAQ)\n" +
             "(3 câu hỏi + trả lời ngắn, mỗi câu bắt đầu bằng 'Hỏi:' và 'Đáp:')\n\n" +
             "QUY TẮC VIẾT:\n" +
@@ -175,8 +174,7 @@ public class ChatAIService {
             metaTitle = p.getName() + " " + conditionVi + " - DuyLongTech";
         }
         if (metaDesc.isEmpty()) {
-            metaDesc = p.getName() + " " + conditionVi + ", " + p.getCpuModel() + ", " + p.getRamAmount() +
-                    ". Bảo hành " + p.getWarrantyMonths() + " tháng tại DuyLongTech.";
+            metaDesc = p.getName() + " " + conditionVi + ", " + p.getCpuModel() + ", " + p.getRamAmount() + ".";
         }
         if (article.isEmpty()) {
             article = aiResponse; // Dùng toàn bộ response nếu không parse được
@@ -354,7 +352,6 @@ public class ChatAIService {
         m.put("gpu", p.getGpuName());
         m.put("condition", p.getCondition());
         m.put("price", p.getBasePrice());
-        m.put("warranty", p.getWarrantyMonths() + " tháng");
         m.put("imageUrl", p.getImageUrl());
         return m;
     }

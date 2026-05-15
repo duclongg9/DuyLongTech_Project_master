@@ -8,7 +8,6 @@ import vn.com.duylongtech.backend.entity.*;
 import vn.com.duylongtech.backend.repository.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Configuration
 public class DataLoader {
@@ -17,7 +16,6 @@ public class DataLoader {
     CommandLineRunner initDatabase(
             ProductRepository productRepo,
             CategoryRepository categoryRepo,
-            WarehouseRepository warehouseRepo,
             UserRepository userRepo,
             DeviceComponentRepository componentRepo,
             ShipperWalletRepository walletRepo,
@@ -48,9 +46,6 @@ public class DataLoader {
             Category macbook = categoryRepo.save(Category.builder().name("MacBook").description("Apple MacBook").build());
             Category gaming = categoryRepo.save(Category.builder().name("Gaming").description("Laptop Gaming").build());
 
-            // Warehouses
-            warehouseRepo.save(Warehouse.builder().name("Kho Tổng").address("123 Giải Phóng, Hà Nội").type("Sales").build());
-            warehouseRepo.save(Warehouse.builder().name("Kho Bảo Hành").address("123 Giải Phóng, Hà Nội").type("Warranty").build());
 
             // ===================== PRODUCTS =====================
 
@@ -69,10 +64,7 @@ public class DataLoader {
                     .os("Windows 11 Pro").keyboard("Đèn nền xanh")
                     .basePrice(new BigDecimal("12500000")).minPrice(new BigDecimal("11800000")).costPrice(new BigDecimal("9000000"))
                     .priceNegotiable(false).callForPrice(false)
-                    .warrantyType("SHOP").warrantyMonths(12)
-                    .warrantyStartDate(LocalDate.now()).warrantyEndDate(LocalDate.now().plusMonths(12))
-                    .warrantyNote("BH 12 tháng tại cửa hàng. Không BH: vào nước, rơi vỡ, can thiệp ngoài.")
-                    .serialNumber("SN-DL7420-A001").status("AVAILABLE").quantity(3)
+                    .inStock(true)
                     .category(laptop).description("Dòng doanh nhân cao cấp. Chuẩn quân sự MIL-STD-810H. Vân tay + IR Camera.")
                     .imageUrl("https://placehold.co/800x500/0A1628/06B6D4?text=Dell+Latitude+7420").build());
 
@@ -91,10 +83,7 @@ public class DataLoader {
                     .os("Windows 11 Home").keyboard("Đèn nền trắng")
                     .basePrice(new BigDecimal("0")).priceNegotiable(true).callForPrice(true)
                     .priceNote("Giá dao động theo thị trường. Vui lòng liên hệ để có giá tốt nhất.")
-                    .warrantyType("SHOP").warrantyMonths(6)
-                    .warrantyStartDate(LocalDate.now()).warrantyEndDate(LocalDate.now().plusMonths(6))
-                    .warrantyNote("BH 6 tháng. Lưu ý: máy đã qua sử dụng, BH không bao gồm màn hình và pin.")
-                    .serialNumber("SN-XPS13-B002").status("AVAILABLE").quantity(1)
+                    .inStock(true)
                     .category(laptop).description("Flagship siêu mỏng của Dell. InfinityEdge viền siêu mỏng.")
                     .imageUrl("https://placehold.co/800x500/0A1628/06B6D4?text=Dell+XPS+13").build());
 
@@ -113,10 +102,7 @@ public class DataLoader {
                     .os("Windows 11 Pro").keyboard("Đèn nền, TrackPoint đỏ")
                     .basePrice(new BigDecimal("18900000")).minPrice(new BigDecimal("18000000")).costPrice(new BigDecimal("14000000"))
                     .priceNegotiable(false).callForPrice(false)
-                    .warrantyType("BRAND").warrantyMonths(8)
-                    .warrantyStartDate(LocalDate.of(2024, 5, 1)).warrantyEndDate(LocalDate.of(2025, 5, 1))
-                    .warrantyNote("Còn BH Lenovo đến 05/2025. Tra cứu S/N tại support.lenovo.com")
-                    .serialNumber("PF3K2ABC").status("AVAILABLE").quantity(2)
+                    .inStock(true)
                     .category(laptop).description("Huyền thoại siêu nhẹ chỉ 1.13kg. Bàn phím ThinkPad tốt nhất ngành.")
                     .imageUrl("https://placehold.co/800x500/0A1628/06B6D4?text=ThinkPad+X1+Carbon").build());
 
@@ -135,10 +121,7 @@ public class DataLoader {
                     .os("Windows 11 Pro").keyboard("Đèn nền")
                     .basePrice(new BigDecimal("14500000")).minPrice(new BigDecimal("13800000")).costPrice(new BigDecimal("10500000"))
                     .priceNegotiable(false).callForPrice(false)
-                    .warrantyType("SHOP").warrantyMonths(12)
-                    .warrantyStartDate(LocalDate.now()).warrantyEndDate(LocalDate.now().plusMonths(12))
-                    .warrantyNote("BH 12 tháng tại cửa hàng.")
-                    .serialNumber("PF4XAMD001").status("AVAILABLE").quantity(1)
+                    .inStock(true)
                     .category(laptop).description("8 nhân AMD Ryzen mạnh mẽ, pin trâu 11h. Lý tưởng cho lập trình viên.")
                     .imageUrl("https://placehold.co/800x500/0A1628/06B6D4?text=ThinkPad+T14s+AMD").build());
 
@@ -157,10 +140,7 @@ public class DataLoader {
                     .os("macOS Ventura").keyboard("Đèn nền, Touch ID")
                     .basePrice(new BigDecimal("23500000")).minPrice(new BigDecimal("22800000")).costPrice(new BigDecimal("18000000"))
                     .priceNegotiable(false).callForPrice(false)
-                    .warrantyType("SHOP").warrantyMonths(12)
-                    .warrantyStartDate(LocalDate.now()).warrantyEndDate(LocalDate.now().plusMonths(12))
-                    .warrantyNote("BH 12 tháng. Lưu ý: không BH nếu tài khoản iCloud bị khoá.")
-                    .serialNumber("C02XM2TEST").status("AVAILABLE").quantity(2)
+                    .inStock(true)
                     .category(macbook).description("Chip M2 cách mạng, không quạt, không ồn. Pin 18h thực tế.")
                     .imageUrl("https://placehold.co/800x500/0A1628/06B6D4?text=MacBook+Air+M2").build());
 
@@ -179,10 +159,7 @@ public class DataLoader {
                     .os("Windows 11 Home").keyboard("RGB Per-key Backlit")
                     .basePrice(new BigDecimal("0")).priceNegotiable(true).callForPrice(true)
                     .priceNote("Giá GPU dao động mạnh. Liên hệ để có báo giá mới nhất trong ngày.")
-                    .warrantyType("SHOP").warrantyMonths(6)
-                    .warrantyStartDate(LocalDate.now()).warrantyEndDate(LocalDate.now().plusMonths(6))
-                    .warrantyNote("BH 6 tháng tại cửa hàng. GPU/màn hình BH riêng 3 tháng.")
-                    .serialNumber("G14-2023-001").status("AVAILABLE").quantity(1)
+                    .inStock(true)
                     .category(gaming).description("Gaming laptop RTX 4060, màn QHD 165Hz, nhỏ gọn 1.72kg.")
                     .imageUrl("https://placehold.co/800x500/0A1628/06B6D4?text=ROG+G14+RTX+4060").build());
 
@@ -202,10 +179,7 @@ public class DataLoader {
                     .basePrice(new BigDecimal("9500000")).minPrice(new BigDecimal("9000000")).costPrice(new BigDecimal("6500000"))
                     .priceNegotiable(true).callForPrice(false)
                     .priceNote("Có thể thương lượng khi mua nhiều hoặc combo phụ kiện.")
-                    .warrantyType("SHOP").warrantyMonths(3)
-                    .warrantyStartDate(LocalDate.now()).warrantyEndDate(LocalDate.now().plusMonths(3))
-                    .warrantyNote("BH 3 tháng tại cửa hàng. Riêng màn hình & pin không bảo hành.")
-                    .serialNumber("HP840G8-001").status("AVAILABLE").quantity(2)
+                    .inStock(true)
                     .category(laptop).description("Doanh nhân cao cấp HP với Sure View privacy screen tích hợp.")
                     .imageUrl("https://placehold.co/800x500/0A1628/06B6D4?text=HP+Elitebook+840").build());
 
@@ -218,7 +192,7 @@ public class DataLoader {
                 // MAINBOARD
                 componentRepo.save(DeviceComponent.builder().product(p).componentType("MAINBOARD")
                         .name(p.getBrand() + " " + p.getModel() + " System Board")
-                        .serialNumber("MB-" + p.getSerialNumber())
+                        .serialNumber("MB-" + p.getId())
                         .manufacturer(p.getBrand())
                         .specs("Chipset " + (p.getCpuBrand().equals("Intel") ? "Intel PCH" : p.getCpuBrand().equals("AMD") ? "AMD FCH" : "Apple SoC"))
                         .status("OK").build());
@@ -226,7 +200,7 @@ public class DataLoader {
                 // CPU
                 componentRepo.save(DeviceComponent.builder().product(p).componentType("CPU")
                         .name(p.getCpuFullName() != null ? p.getCpuFullName() : p.getCpuModel())
-                        .serialNumber("CPU-" + p.getSerialNumber() + "-" + (int)(Math.random()*9000+1000))
+                        .serialNumber("CPU-" + p.getId() + "-" + (int)(Math.random()*9000+1000))
                         .manufacturer(p.getCpuBrand())
                         .specs(p.getCpuCores() + "C/" + p.getCpuThreads() + "T, " + p.getCpuBaseClock() + "-" + p.getCpuBoostClock() + ", TDP " + p.getCpuTdp())
                         .status("OK").build());
@@ -234,7 +208,7 @@ public class DataLoader {
                 // RAM
                 componentRepo.save(DeviceComponent.builder().product(p).componentType("RAM")
                         .name(p.getRamAmount() + " " + p.getRamType() + " " + p.getRamSpeed())
-                        .serialNumber("RAM-" + p.getSerialNumber() + "-" + (int)(Math.random()*9000+1000))
+                        .serialNumber("RAM-" + p.getId() + "-" + (int)(Math.random()*9000+1000))
                         .manufacturer(p.getRamType().contains("LP") ? "SK Hynix" : "Samsung")
                         .specs(p.getRamAmount() + " " + p.getRamType() + " @ " + p.getRamSpeed() + (Boolean.TRUE.equals(p.getRamSlots()) ? " (Có slot trống)" : " (Hàn chết)"))
                         .status("OK").build());
@@ -242,7 +216,7 @@ public class DataLoader {
                 // SSD
                 componentRepo.save(DeviceComponent.builder().product(p).componentType("SSD")
                         .name(p.getStorageMain())
-                        .serialNumber("SSD-" + p.getSerialNumber() + "-" + (int)(Math.random()*9000+1000))
+                        .serialNumber("SSD-" + p.getId() + "-" + (int)(Math.random()*9000+1000))
                         .manufacturer(p.getStorageMain().contains("256") ? "Western Digital" : "Samsung")
                         .specs(p.getStorageType() + (Boolean.TRUE.equals(p.getStorageSlot()) ? " (Có khe mở rộng)" : " (Không mở rộng)"))
                         .status("OK").build());
@@ -250,7 +224,7 @@ public class DataLoader {
                 // GPU
                 componentRepo.save(DeviceComponent.builder().product(p).componentType("GPU")
                         .name(p.getGpuName())
-                        .serialNumber("GPU-" + p.getSerialNumber() + "-" + (int)(Math.random()*9000+1000))
+                        .serialNumber("GPU-" + p.getId() + "-" + (int)(Math.random()*9000+1000))
                         .manufacturer(p.getGpuName().contains("Intel") ? "Intel" : p.getGpuName().contains("NVIDIA") ? "NVIDIA" : p.getGpuName().contains("AMD") ? "AMD" : "Apple")
                         .specs(p.getGpuType().equals("DEDICATED") ? "GPU rời, VRAM riêng" : "Tích hợp trên CPU")
                         .status("OK").build());
@@ -258,7 +232,7 @@ public class DataLoader {
                 // BATTERY
                 componentRepo.save(DeviceComponent.builder().product(p).componentType("BATTERY")
                         .name("Pin " + p.getBattery())
-                        .serialNumber("BAT-" + p.getSerialNumber() + "-" + (int)(Math.random()*9000+1000))
+                        .serialNumber("BAT-" + p.getId() + "-" + (int)(Math.random()*9000+1000))
                         .manufacturer(p.getBrand())
                         .specs(p.getBattery())
                         .status("OK")

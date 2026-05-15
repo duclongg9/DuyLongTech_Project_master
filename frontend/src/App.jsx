@@ -12,6 +12,9 @@ import Footer from './components/Footer'
 import AuthModals from './components/AuthModals'
 import { SosButton, SosModal } from './components/SosModal'
 import PrintTicketModal from './components/PrintTicketModal'
+import GlobalNotificationSystem from './components/GlobalNotificationSystem'
+import { VisualEditorProvider } from './components/VisualEditorContext'
+import VisualToolbar from './components/VisualToolbar'
 
 // Pages
 import HomePage from './pages/HomePage'
@@ -45,43 +48,47 @@ export default function App() {
   const notify = m => { setToast(m); setTimeout(() => setToast(null), 3000) }
   
   const { user, doAuth, logout } = useAuth(notify, setModal, setPage)
-  const { cart, config, setConfig, addToCart, removeFromCart, setCart, cartTotal, calcPrice } = useCart(notify)
+  const { cart, config, setConfig, addToCart, removeFromCart, updateQuantity, setCart, cartTotal, calcPrice } = useCart(notify)
 
   const goHome = () => { setPage('home'); setSel(null) }
 
   return (
-    <div>
-      <Header user={user} uiSettings={uiSettings} cart={cart} setPage={setPage} setModal={setModal} onLogout={logout} />
+    <VisualEditorProvider user={user} initialSettings={uiSettings}>
+      <div>
+        <VisualToolbar user={user} />
+        <Header user={user} uiSettings={uiSettings} cart={cart} setPage={setPage} setModal={setModal} onLogout={logout} />
 
-      {page === 'home' && <HomePage products={products} uiSettings={uiSettings} setPage={setPage} setSel={setSel} setConfig={setConfig} />}
-      {page === 'pdp' && <ProductPage sel={sel} config={config} setConfig={setConfig} addToCart={addToCart} calcPrice={calcPrice} />}
-      {page === 'cart' && <CartPage cart={cart} removeFromCart={removeFromCart} cartTotal={cartTotal} setPage={setPage} setModal={setModal} user={user} />}
-      {(page === 'shipping' || page === 'payment') && <CheckoutPage page={page} setPage={setPage} cart={cart} cartTotal={cartTotal} setCart={setCart} notify={notify} />}
-      
-      {page === 'staff' && <StaffPage products={products} setTicket={setTicket} setModal={setModal} notify={notify} />}
-      {page === 'ai' && <AiPage products={products} setSel={setSel} setConfig={setConfig} setPage={setPage} />}
-      {page === 'seo' && <SeoPage products={products} notify={notify} />}
+        {page === 'home' && <HomePage products={products} uiSettings={uiSettings} setPage={setPage} setSel={setSel} setConfig={setConfig} user={user} notify={notify} />}
+        {page === 'pdp' && <ProductPage sel={sel} config={config} setConfig={setConfig} addToCart={addToCart} calcPrice={calcPrice} />}
+        {page === 'cart' && <CartPage cart={cart} removeFromCart={removeFromCart} updateQuantity={updateQuantity} cartTotal={cartTotal} setPage={setPage} setModal={setModal} user={user} />}
+        {(page === 'shipping' || page === 'verify' || page === 'payment') && <CheckoutPage page={page} setPage={setPage} cart={cart} cartTotal={cartTotal} setCart={setCart} notify={notify} />}
+        
+        {page === 'staff' && <StaffPage products={products} setTicket={setTicket} setModal={setModal} notify={notify} />}
+        {page === 'ai' && <AiPage products={products} setSel={setSel} setConfig={setConfig} setPage={setPage} />}
+        {page === 'seo' && <SeoPage products={products} notify={notify} />}
 
-      {/* Sub-Apps */}
-      {page === 'tech' && <TechnicianApp onBack={goHome} />}
-      {page === 'pcbuild' && <PcBuilderApp onBack={goHome} />}
-      {page === 'kiosk' && <KioskApp onBack={goHome} />}
-      {page === 'pos' && <TabletPOS onBack={goHome} />}
-      {page === 'admin' && user?.role === 'ADMIN' && <AdminDashboard user={user} onBack={goHome} />}
-      {page === 'shipper' && user?.role === 'SHIPPER' && <ShipperApp user={user} onBack={goHome} />}
+        {/* Sub-Apps */}
+        {page === 'tech' && <TechnicianApp onBack={goHome} />}
+        {page === 'pcbuild' && <PcBuilderApp onBack={goHome} />}
+        {page === 'kiosk' && <KioskApp onBack={goHome} />}
+        {page === 'pos' && <TabletPOS onBack={goHome} />}
+        {page === 'admin' && user?.role === 'ADMIN' && <AdminDashboard user={user} onBack={goHome} />}
+        {page === 'shipper' && user?.role === 'SHIPPER' && <ShipperApp user={user} onBack={goHome} />}
 
-      {/* Shared UI */}
-      {['home', 'pdp', 'cart', 'shipping', 'payment', 'staff', 'ai', 'seo'].includes(page) && (
-        <Footer uiSettings={uiSettings} />
-      )}
+        {/* Shared UI */}
+        {['home', 'pdp', 'cart', 'shipping', 'verify', 'payment', 'staff', 'ai', 'seo'].includes(page) && (
+          <Footer uiSettings={uiSettings} />
+        )}
 
-      {/* Modals & Overlays */}
-      <AuthModals modal={modal} setModal={setModal} doAuth={doAuth} />
-      <SosButton user={user} setModal={setModal} />
-      <SosModal user={user} modal={modal} setModal={setModal} />
-      <PrintTicketModal modal={modal} setModal={setModal} ticket={ticket} />
+        {/* Modals & Overlays */}
+        <AuthModals modal={modal} setModal={setModal} doAuth={doAuth} />
+        <SosButton user={user} setModal={setModal} />
+        <SosModal user={user} modal={modal} setModal={setModal} />
+        <PrintTicketModal modal={modal} setModal={setModal} ticket={ticket} />
 
-      {toast && <div className="toast">{toast}</div>}
-    </div>
+        {toast && <div className="toast">{toast}</div>}
+        <GlobalNotificationSystem user={user} setPage={setPage} />
+      </div>
+    </VisualEditorProvider>
   )
 }

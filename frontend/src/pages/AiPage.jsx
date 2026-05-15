@@ -183,7 +183,7 @@ export default function AiPage({ products, setSel, setConfig, setPage }) {
               <div className="grid g3">
                 {aiResult.products.map(p => (
                   <div key={p.id} className="product-card"
-                    onClick={() => { fetch(`${API}/products/${p.id}`).then(r => r.json()).then(d => { setSel(d); setConfig({ ram: d.ramAmount, ssd: d.storageMain }); setPage('pdp') }) }}
+                    onClick={() => { fetch(`${API}/products/${p.id}`).then(r => r.json()).then(d => { setSel(d); setConfig({}); setPage('pdp') }) }}
                   >
                     <div className="thumb"><img src={p.imageUrl || `https://placehold.co/800x500/121212/00F0FF?text=${encodeURIComponent(p.name)}`} alt={p.name} /></div>
                     <div className="body">

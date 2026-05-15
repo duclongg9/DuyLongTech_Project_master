@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { condLabel, condClass, fmt } from '../constants'
 
 /**
@@ -7,6 +8,27 @@ export default function ProductPage({ sel, config, setConfig, addToCart, calcPri
   if (!sel) return null
 
   const related = [sel, sel, sel, sel];
+
+  // Group options by optionGroup
+  const optionGroups = {};
+  if (sel.options && Array.isArray(sel.options)) {
+    sel.options.forEach(o => {
+      if (!optionGroups[o.optionGroup]) optionGroups[o.optionGroup] = [];
+      optionGroups[o.optionGroup].push(o);
+    });
+  }
+
+  useEffect(() => {
+    if (sel && sel.options && sel.options.length > 0) {
+      const defaultCfg = {};
+      Object.keys(optionGroups).forEach(g => {
+        if (!config[g]) defaultCfg[g] = optionGroups[g][0].optionName;
+      });
+      if (Object.keys(defaultCfg).length > 0) {
+        setConfig(prev => ({...prev, ...defaultCfg}));
+      }
+    }
+  }, [sel?.id]);
 
   return (
     <div className="container">
@@ -80,31 +102,25 @@ export default function ProductPage({ sel, config, setConfig, addToCart, calcPri
               )}
             </div>
 
-            <div className="config-container">
-              <div className="config-title">Cấu hình tùy chọn</div>
-              
-              <div className="config-group">
-                <label>Bộ nhớ RAM</label>
-                <div className="config-options">
-                  {['8GB', '16GB', '32GB'].map(r => (
-                    <div key={r} className={`config-pill ${config.ram === r ? 'active' : ''}`} onClick={() => setConfig({ ...config, ram: r })}>
-                      {r} {r !== sel.ramAmount && r === '16GB' ? '(+800k)' : r !== sel.ramAmount && r === '32GB' ? '(+2tr)' : ''}
+            {Object.keys(optionGroups).length > 0 && (
+              <div className="config-container">
+                <div className="config-title">Cấu hình tùy chọn</div>
+                {Object.entries(optionGroups).map(([groupName, options]) => (
+                  <div key={groupName} className="config-group mt-3">
+                    <label>{groupName}</label>
+                    <div className="config-options">
+                      {options.map(opt => (
+                        <div key={opt.optionName} 
+                             className={`config-pill ${config[groupName] === opt.optionName ? 'active' : ''}`} 
+                             onClick={() => setConfig({ ...config, [groupName]: opt.optionName })}>
+                          {opt.optionName} {opt.priceAdjustment > 0 ? `(+${fmt(opt.priceAdjustment)}₫)` : ''}
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
-              
-              <div className="config-group mt-3">
-                <label>Ổ cứng SSD</label>
-                <div className="config-options">
-                  {[sel.storageMain, '512GB SSD', '1TB SSD'].filter((v, i, a) => a.indexOf(v) === i).map(s => (
-                    <div key={s} className={`config-pill ${config.ssd === s ? 'active' : ''}`} onClick={() => setConfig({ ...config, ssd: s })}>
-                      {s}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            )}
 
             <div className="cta-wrapper">
               {!sel.callForPrice ? (

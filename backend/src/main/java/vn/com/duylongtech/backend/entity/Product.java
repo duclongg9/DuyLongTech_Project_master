@@ -3,7 +3,6 @@ package vn.com.duylongtech.backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -84,20 +83,12 @@ public class Product {
     @Column(columnDefinition = "TEXT")
     private String priceNote;            // "Giá có thể thay đổi theo thị trường"
 
-    // --- Bảo hành (rất quan trọng với hàng cũ) ---
-    private String warrantyType;         // SHOP, BRAND, NONE
-    private Integer warrantyMonths;      // 0, 3, 6, 12, 24...
-    private LocalDate warrantyStartDate; // Ngày bắt đầu tính BH
-    private LocalDate warrantyEndDate;   // Ngày kết thúc BH
-    @Column(columnDefinition = "TEXT")
-    private String warrantyNote;         // "BH tại cửa hàng, không BH màn hình"
-    private Boolean warrantyVoidIfOpen;  // Mất BH nếu tháo máy
+    // --- Trạng thái bán hàng ---
+    private Boolean inStock; // true = Còn hàng, false = Hết hàng
 
-    // --- Serial & Kho ---
-    private String serialNumber;
-    private String imei;
-    private String status;               // AVAILABLE, SOLD, WARRANTY, REPAIR, RESERVED, DAMAGED
-    private Integer quantity;            // Số lượng tồn
+    @Builder.Default
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private java.util.List<ProductOption> options = new java.util.ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "category_id")

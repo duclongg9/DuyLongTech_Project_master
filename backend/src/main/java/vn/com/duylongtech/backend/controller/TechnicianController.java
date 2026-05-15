@@ -32,7 +32,7 @@ public class TechnicianController {
     public ResponseEntity<?> scanDevice(@PathVariable String serialOrQr) {
         // Tìm sản phẩm theo Serial Number
         Optional<Product> optProduct = productRepository.findAll().stream()
-                .filter(p -> serialOrQr.equals(p.getSerialNumber()) || serialOrQr.equals(String.valueOf(p.getId())))
+                .filter(p -> serialOrQr.equals(String.valueOf(p.getId())))
                 .findFirst();
 
         if (optProduct.isEmpty()) {
@@ -46,16 +46,7 @@ public class TechnicianController {
         Map<String, Object> deviceTree = new LinkedHashMap<>();
         deviceTree.put("id", product.getId());
         deviceTree.put("name", product.getName());
-        deviceTree.put("serialNumber", product.getSerialNumber());
-        deviceTree.put("brand", product.getBrand());
-        deviceTree.put("condition", product.getCondition());
-        deviceTree.put("conditionNote", product.getConditionNote());
-        deviceTree.put("status", product.getStatus());
-        deviceTree.put("warrantyMonths", product.getWarrantyMonths());
-        deviceTree.put("warrantyType", product.getWarrantyType());
-        deviceTree.put("warrantyNote", product.getWarrantyNote());
-        deviceTree.put("warrantyStart", product.getWarrantyStartDate());
-        deviceTree.put("warrantyEnd", product.getWarrantyEndDate());
+        deviceTree.put("inStock", product.getInStock());
         deviceTree.put("imageUrl", product.getImageUrl());
 
         // Nhóm components theo type

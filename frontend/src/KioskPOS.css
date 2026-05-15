@@ -167,282 +167,167 @@
 .kiosk-done-msg { color: #94A3B8; font-size: 1rem; line-height: 1.6; margin-bottom: 32px; }
 
 /* ======================================================
-   TABLET POS — Staff Order Management
+   TABLET POS — Modern Staff UI
    ====================================================== */
 
 .tablet-pos {
-  min-height: 100vh; background: #0B1120; color: #E8E8ED;
-  font-family: 'Inter', sans-serif;
+  min-height: 100vh; background: #0F172A; color: #F8FAFC;
+  font-family: 'Inter', system-ui, sans-serif; padding-bottom: 40px;
 }
 .pos-header {
-  display: flex; align-items: center; gap: 12px;
-  padding: 16px 24px; background: #1E293B;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 24px; background: rgba(30, 41, 59, 0.8);
+  backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255,255,255,0.06);
+  position: sticky; top: 0; z-index: 100;
 }
-.pos-back {
-  background: rgba(255,255,255,0.08); border: none; color: #fff;
-  width: 38px; height: 38px; border-radius: 10px; font-size: 1.1rem; cursor: pointer;
+.pos-status-pill {
+  padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 800;
+  display: flex; align-items: center; gap: 6px;
 }
-.pos-header h1 { flex: 1; font-size: 1.1rem; font-weight: 700; }
-.pos-status { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #34C759; }
-.pos-ws-dot {
-  width: 8px; height: 8px; border-radius: 50%; background: #34C759;
-  box-shadow: 0 0 8px #34C759; animation: pulse-dot 2s ease-in-out infinite;
-}
-@keyframes pulse-dot { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+.unseen-pill { background: rgba(239, 68, 68, 0.15); color: #F87171; animation: pulse-dot 1.5s infinite; }
+.pending-pill { background: rgba(245, 158, 11, 0.15); color: #FBBF24; }
 
-/* Modal */
-.pos-modal-overlay {
-  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 100; padding: 20px;
-  animation: fadeIn 0.2s ease;
+/* Grid Layout */
+.pos-orders { padding: 24px; }
+.pos-section-header {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
 }
-.pos-modal {
-  background: #1E293B; border-radius: 20px; width: 100%; max-width: 460px;
-  overflow: hidden; border: 1px solid rgba(6,182,212,0.2);
-  animation: slideUp 0.3s ease;
-}
-@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } }
-.pos-modal-header {
-  background: linear-gradient(135deg, #EF4444, #DC2626);
-  padding: 20px; text-align: center; color: #fff;
-}
-.pos-alert-icon { font-size: 2rem; display: block; margin-bottom: 4px; }
-.pos-modal-header h2 { font-size: 1.1rem; font-weight: 800; }
-.pos-modal-body { padding: 20px; }
-.pos-order-id {
-  text-align: center; font-size: 1.3rem; font-weight: 800;
-  color: #06B6D4; margin-bottom: 4px;
-}
-.pos-order-time { text-align: center; font-size: 0.85rem; color: #64748B; margin-bottom: 16px; }
-.pos-customer {
-  display: flex; justify-content: space-between;
-  padding: 10px 14px; background: rgba(0,0,0,0.2); border-radius: 10px;
-  font-size: 0.9rem; margin-bottom: 12px;
-}
-.pos-items { margin-bottom: 12px; }
-.pos-item {
-  padding: 10px 14px; background: rgba(6,182,212,0.06); border-radius: 8px;
-  margin-bottom: 6px;
-}
-.pos-item-name { font-weight: 700; font-size: 0.95rem; }
-.pos-item-config { font-size: 0.8rem; color: #94A3B8; }
-.pos-item-price { font-weight: 700; color: #06B6D4; text-align: right; }
-.pos-total {
-  display: flex; justify-content: space-between;
-  padding: 12px 14px; background: rgba(6,182,212,0.1); border-radius: 10px;
-  font-size: 1.2rem; font-weight: 800;
-}
-.pos-modal-actions { display: flex; flex-direction: column; gap: 8px; padding: 0 20px 20px; }
-.pos-btn-print {
-  width: 100%; padding: 16px; background: linear-gradient(135deg, #34C759, #22C55E);
-  color: #fff; border: none; border-radius: 12px; font-size: 1.05rem;
-  font-weight: 800; cursor: pointer; font-family: inherit;
-}
-.pos-btn-print:active { transform: scale(0.97); }
-.pos-btn-dismiss {
-  width: 100%; padding: 12px; background: transparent;
-  color: #64748B; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
-  font-size: 0.9rem; cursor: pointer; font-family: inherit;
+.pos-order-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;
 }
 
-/* Orders List */
-.pos-orders { padding: 20px 24px; }
-.pos-section-title { font-size: 1rem; font-weight: 700; margin-bottom: 12px; color: #CBD5E1; }
-.pos-empty { text-align: center; padding: 60px 20px; }
-.pos-empty-icon { font-size: 3rem; margin-bottom: 12px; }
-.pos-empty p { color: #94A3B8; }
-.pos-empty-sub { font-size: 0.8rem; color: #64748B; margin-top: 4px; }
-
+/* Card Professional */
 .pos-order-card {
-  background: #1E293B; border-radius: 14px; padding: 16px; margin-bottom: 10px;
-  border-left: 4px solid #334155;
+  background: #1E293B; border-radius: 16px; padding: 20px;
+  border: 1px solid rgba(255,255,255,0.05); cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex; flex-direction: column; gap: 12px;
 }
-.pos-order-card.pending { border-left-color: #F59E0B; }
-.poc-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.poc-id { font-weight: 700; font-size: 0.95rem; }
-.poc-status {
-  padding: 2px 10px; border-radius: 6px; font-size: 0.72rem;
-  font-weight: 700; text-transform: uppercase;
-}
-.poc-status.pending { background: rgba(245,158,11,0.15); color: #F59E0B; }
-.poc-time { margin-left: auto; font-size: 0.8rem; color: #64748B; }
-.poc-customer { font-size: 0.85rem; color: #94A3B8; margin-bottom: 8px; }
-.poc-items { margin-bottom: 8px; }
-.poc-item {
-  display: flex; justify-content: space-between;
-  padding: 6px 0; font-size: 0.85rem;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+.pos-order-card:hover { transform: translateY(-4px); border-color: rgba(6, 182, 212, 0.3); background: #242F44; }
+.pos-order-card.unseen { border-left: 4px solid #EF4444; }
+.pos-order-card.checked { opacity: 0.7; }
+
+.poc-header { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; }
+.poc-id { font-weight: 800; color: #94A3B8; }
+.poc-source { padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 900; }
+.source-web { background: #3B82F6; color: #fff; }
+.source-kiosk { background: #F59E0B; color: #fff; }
+.poc-status { margin-left: auto; font-weight: 800; text-transform: uppercase; font-size: 0.75rem; }
+
+.status-pending { color: #FBBF24; }
+.status-completed { color: #10B981; }
+.status-cancelled { color: #94A3B8; }
+
+.poc-customer { font-size: 1rem; color: #F1F5F9; }
+.poc-summary { font-size: 0.9rem; color: #94A3B8; }
+.poc-timer-box { margin-top: 4px; }
+.poc-timer {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(245, 158, 11, 0.1); color: #F59E0B;
+  padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 700;
 }
 .poc-footer {
-  display: flex; justify-content: space-between; align-items: center; margin-top: 8px;
-}
-.poc-total { font-weight: 700; color: #06B6D4; }
-.pos-btn-sm {
-  padding: 8px 14px; background: rgba(6,182,212,0.12); color: #06B6D4;
-  border: none; border-radius: 8px; font-size: 0.8rem; font-weight: 600;
-  cursor: pointer; font-family: inherit;
-}
-
-/* Kiosk Account Box (Done screen) */
-.kiosk-account-box {
-  background: rgba(6,182,212,0.08); border: 1px solid rgba(6,182,212,0.2);
-  border-radius: 14px; padding: 20px; margin: 20px auto; max-width: 400px;
-  text-align: left;
-}
-.kiosk-account-box h3 { font-size: 1.1rem; margin-bottom: 6px; text-align: center; }
-.kiosk-account-box > p { text-align: center; font-size: 0.85rem; color: #94A3B8; margin-bottom: 12px; }
-.kiosk-cred {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 10px 14px; background: rgba(0,0,0,0.3); border-radius: 8px;
-  margin-bottom: 6px; font-size: 0.95rem;
+  margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.05);
 }
-.kiosk-cred span { color: #94A3B8; }
-.kiosk-cred strong { color: #06B6D4; font-family: 'Courier New', monospace; font-size: 1.1rem; letter-spacing: 1px; }
-.kiosk-cred-note { text-align: center; font-size: 0.8rem; color: #FFB84D; margin-top: 8px; }
+.poc-time { font-size: 0.8rem; color: #64748B; }
+.pos-btn-view { color: #06B6D4; font-size: 0.85rem; font-weight: 700; border: none; background: none; cursor: pointer; }
 
-/* ======================================================
-   @media print — Biên lai A5 (148mm × 210mm)
-   ====================================================== */
+/* ═══ Professional Detail Modal ═══ */
+.detail-modal {
+  max-width: 650px !important; background: #0F172A !important;
+  display: flex; flex-direction: column; height: 90vh; max-height: 800px;
+}
+.detail-header {
+  padding: 24px; border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.detail-header.status-pending { border-top: 4px solid #F59E0B; }
+.detail-header.status-completed { border-top: 4px solid #10B981; }
 
-.print-receipt { display: none; }
+.detail-header h2 { font-size: 1.25rem; font-weight: 800; margin-bottom: 4px; }
+.detail-source { font-size: 0.85rem; color: #64748B; }
+.detail-close { background: none; border: none; color: #64748B; font-size: 1.5rem; cursor: pointer; }
+
+.detail-body { padding: 24px; overflow-y: auto; flex: 1; }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
+.detail-section h3 { font-size: 0.75rem; font-weight: 900; color: #475569; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+.detail-section p { font-size: 0.95rem; margin-bottom: 8px; color: #CBD5E1; }
+.detail-section strong { color: #94A3B8; font-weight: 500; margin-right: 4px; }
+
+.items-section { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 24px; }
+.detail-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.di-name { font-weight: 700; display: block; }
+.di-spec { font-size: 0.8rem; color: #64748B; }
+.di-price { font-weight: 800; color: #F8FAFC; }
+
+.detail-total {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 20px; padding: 16px; background: rgba(6, 182, 212, 0.08);
+  border-radius: 12px; font-size: 1.2rem; font-weight: 900; color: #06B6D4;
+}
+
+.detail-actions {
+  padding: 24px; background: #1E293B; display: flex; gap: 12px;
+}
+.btn-complete {
+  flex: 2; padding: 16px; background: #10B981; color: #fff; border: none;
+  border-radius: 12px; font-weight: 800; font-size: 1rem; cursor: pointer;
+}
+.btn-print {
+  flex: 1; padding: 16px; background: rgba(255,255,255,0.1); color: #fff; border: none;
+  border-radius: 12px; font-weight: 700; cursor: pointer;
+}
+.btn-cancel {
+  padding: 16px; background: rgba(239, 68, 68, 0.1); color: #EF4444; border: none;
+  border-radius: 12px; font-weight: 700; cursor: pointer;
+}
+
+/* ═══ Professional Print Receipt (Modern) ═══ */
+.print-receipt-modern { display: none; }
 
 @media print {
-  /* Ẩn toàn bộ UI, chỉ giữ biên lai */
   body * { visibility: hidden !important; }
-  .print-receipt, .print-receipt * { visibility: visible !important; }
-
-  .print-receipt {
-    display: block !important;
-    position: fixed; top: 0; left: 0;
-    width: 138mm;
-    padding: 5mm;
-    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
-    font-size: 10pt !important;
-    color: #000 !important;
-    background: #fff !important;
-    line-height: 1.5;
+  .print-receipt-modern, .print-receipt-modern * { visibility: visible !important; }
+  .print-receipt-modern {
+    display: block !important; position: fixed; top: 0; left: 0;
+    width: 140mm; padding: 10mm; background: #fff; color: #000;
+    font-family: 'Segoe UI', system-ui, sans-serif; line-height: 1.4;
   }
+  @page { size: A5; margin: 0; }
 
-  @page {
-    size: A5 portrait;
-    margin: 5mm;
-  }
+  .receipt-header { text-align: center; margin-bottom: 20px; }
+  .shop-logo { font-size: 24pt; font-weight: 900; letter-spacing: -1px; margin-bottom: 4px; }
+  .shop-contact { font-size: 9pt; color: #444; }
 
-  /* Header */
-  .a5-header { text-align: center; margin-bottom: 3mm; }
-  .a5-logo h1 {
-    font-size: 18pt; font-weight: 900; margin: 0;
-    letter-spacing: 2px; color: #000;
-  }
-  .a5-slogan { font-size: 8pt; color: #555; margin: 1mm 0 2mm; }
-  .a5-shop-info p { font-size: 8pt; margin: 0.5mm 0; color: #333; }
-
-  /* Dividers */
-  .a5-divider {
-    border: none; border-top: 1px solid #ccc;
-    margin: 3mm 0;
-  }
-  .a5-divider-double {
-    border: none; border-top: 2px double #333;
-    margin: 3mm 0;
+  .receipt-title {
+    text-align: center; font-size: 14pt; font-weight: 800;
+    padding: 10px 0; border-top: 1px solid #000; border-bottom: 1px solid #000;
+    margin-bottom: 20px;
   }
 
-  /* Title */
-  .a5-title {
-    text-align: center; font-size: 14pt; font-weight: 900;
-    margin: 2mm 0 1mm; text-transform: uppercase;
-    letter-spacing: 3px;
-  }
-  .a5-subtitle {
-    text-align: center; font-size: 9pt; color: #555; margin: 0 0 2mm;
+  .receipt-meta { margin-bottom: 20px; font-size: 10pt; }
+  .meta-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .meta-row span { color: #666; }
+
+  .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+  .receipt-table th { text-align: left; font-size: 9pt; border-bottom: 1.5px solid #000; padding: 8px 0; }
+  .receipt-table td { padding: 10px 0; border-bottom: 0.5px solid #eee; font-size: 10pt; }
+  .item-name { font-weight: 700; }
+  .item-spec { font-size: 8pt; color: #666; }
+  .right { text-align: right; }
+
+  .receipt-summary { margin-bottom: 30px; }
+  .summary-row.total {
+    display: flex; justify-content: space-between; font-size: 16pt; font-weight: 900;
+    padding-top: 10px; border-top: 2px solid #000;
   }
 
-  /* Sections */
-  .a5-section { margin: 2mm 0; }
-  .a5-section h3 {
-    font-size: 10pt; font-weight: 700; margin: 0 0 2mm;
-    padding-bottom: 1mm; border-bottom: 1px solid #ddd;
-    text-transform: uppercase; letter-spacing: 1px;
-  }
-
-  /* Info Table */
-  .a5-info-table { width: 100%; border-collapse: collapse; margin: 1mm 0; }
-  .a5-info-table td { padding: 1mm 2mm; font-size: 9pt; vertical-align: top; }
-  .a5-label { font-weight: 600; color: #555; width: 30%; }
-
-  /* Product Table */
-  .a5-product-table {
-    width: 100%; border-collapse: collapse; margin: 2mm 0;
-  }
-  .a5-product-table th {
-    background: #f0f0f0; padding: 2mm 3mm; font-size: 8pt;
-    font-weight: 700; text-align: left; border-bottom: 1.5px solid #999;
-    text-transform: uppercase;
-  }
-  .a5-product-table td {
-    padding: 2mm 3mm; font-size: 9pt; border-bottom: 0.5px solid #ddd;
-  }
-  .a5-product-table .center { text-align: center; }
-  .a5-product-table .right { text-align: right; }
-  .a5-total-row td {
-    border-top: 1.5px solid #333 !important; border-bottom: none !important;
-    padding-top: 3mm !important; font-size: 11pt !important;
-  }
-
-  /* Warranty */
-  .a5-warranty-terms {
-    margin-top: 2mm; padding: 2mm 3mm;
-    background: #f8f8f8; border-radius: 2mm;
-    font-size: 8pt;
-  }
-  .a5-warranty-terms p { margin: 0 0 1mm; }
-  .a5-warranty-terms ul {
-    margin: 1mm 0; padding-left: 4mm; list-style: none;
-  }
-  .a5-warranty-terms li { margin: 0.5mm 0; font-size: 8pt; }
-
-  /* Account Section */
-  .a5-account-desc { font-size: 8pt; color: #555; margin: 1mm 0; }
-  .a5-account-features {
-    list-style: none; padding: 0; margin: 1mm 0 2mm;
-    display: grid; grid-template-columns: 1fr 1fr; gap: 1mm;
-  }
-  .a5-account-features li { font-size: 8pt; }
-  .a5-account-box {
-    border: 1.5px solid #333; border-radius: 2mm;
-    padding: 3mm; margin: 2mm 0;
-    background: #f5f5f5;
-  }
-  .a5-account-row {
-    display: flex; justify-content: space-between;
-    padding: 1mm 0; font-size: 9pt;
-  }
-  .a5-acc-label { font-weight: 600; color: #333; }
-  .a5-acc-value { font-weight: 700; }
-  .a5-mono { font-family: 'Courier New', monospace; font-size: 11pt; letter-spacing: 1.5px; }
-  .a5-acc-note {
-    font-size: 7.5pt; color: #777; margin-top: 2mm;
-    text-align: center; font-style: italic;
-  }
-
-  /* Footer */
-  .a5-footer { margin-top: 3mm; }
-  .a5-signature-row {
-    display: flex; justify-content: space-between; gap: 10mm;
-    margin-bottom: 3mm;
-  }
-  .a5-sig-col { flex: 1; text-align: center; }
-  .a5-sig-title { font-size: 9pt; font-weight: 700; margin: 0; }
-  .a5-sig-sub { font-size: 7pt; color: #777; font-style: italic; margin: 0.5mm 0; }
-  .a5-sig-space {
-    height: 18mm; border-bottom: 1px dotted #999;
-    margin-top: 2mm;
-  }
-  .a5-thanks { text-align: center; margin-top: 3mm; }
-  .a5-thanks p { font-size: 9pt; font-weight: 700; margin: 0; }
-  .a5-thanks-sub { font-size: 7pt !important; font-weight: 400 !important; color: #777; }
+  .receipt-footer { font-size: 9pt; color: #444; }
+  .warranty-box { background: #f8f8f8; padding: 10px; border-radius: 4px; margin-bottom: 10px; }
+  .account-box { border: 1px dashed #ccc; padding: 10px; border-radius: 4px; margin-bottom: 20px; }
+  .thanks { text-align: center; font-weight: 700; margin-top: 20px; font-size: 10pt; }
 }

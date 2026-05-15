@@ -49,7 +49,7 @@ public class SosController {
 
         // Tìm thiết bị backup
         Product backupDevice = productRepo.findAll().stream()
-                .filter(p -> Boolean.TRUE.equals(p.getIsBackupDevice()) && "AVAILABLE".equals(p.getStatus()))
+                .filter(p -> Boolean.TRUE.equals(p.getIsBackupDevice()) && Boolean.TRUE.equals(p.getInStock()))
                 .findFirst().orElse(null);
 
         // Tạo Ticket

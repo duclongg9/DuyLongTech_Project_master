@@ -59,7 +59,7 @@ export default function PcBuilderApp({ onBack }) {
 
   return (
     <div className="arena-wrapper">
-      <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
+      <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
       
       {isDiamond && <Confetti width={window.innerWidth} height={window.innerHeight} recycle={false} numberOfPieces={500} colors={['#00F0FF', '#B026FF', '#FF0055']} />}
       
@@ -147,7 +147,7 @@ export default function PcBuilderApp({ onBack }) {
                   <ResponsiveContainer width="100%" height="100%">
                     <RadarChart cx="50%" cy="50%" outerRadius="70%" data={chartData}>
                       <PolarGrid stroke="#1A2A3A" />
-                      <PolarAngleAxis dataKey="subject" tick={{ fill: '#00F0FF', fontSize: 11, fontFamily: 'Orbitron' }} />
+                      <PolarAngleAxis dataKey="subject" tick={{ fill: '#00F0FF', fontSize: 11, fontFamily: 'Chakra Petch' }} />
                       <Radar name="Hiệu năng" dataKey="A" stroke={getRankColor(result.rank)} fill={getRankColor(result.rank)} fillOpacity={0.5} />
                     </RadarChart>
                   </ResponsiveContainer>
@@ -194,13 +194,13 @@ export default function PcBuilderApp({ onBack }) {
         
         .btn-back {
           background: transparent; border: 1px solid #00F0FF; color: #00F0FF;
-          padding: 8px 16px; border-radius: 4px; font-family: 'Orbitron', sans-serif;
+          padding: 8px 16px; border-radius: 4px; font-family: 'Chakra Petch', sans-serif;
           cursor: pointer; transition: all 0.2s; text-transform: uppercase; font-weight: 700;
         }
         .btn-back:hover { background: rgba(0, 240, 255, 0.1); box-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
 
         .arena-title {
-          font-family: 'Orbitron', sans-serif; font-size: 2.2rem; font-weight: 900;
+          font-family: 'Chakra Petch', sans-serif; font-size: 2.2rem; font-weight: 900;
           text-transform: uppercase; letter-spacing: 4px; margin: 0;
           background: linear-gradient(90deg, #00F0FF, #B026FF, #00F0FF);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -228,7 +228,7 @@ export default function PcBuilderApp({ onBack }) {
         }
 
         .panel-title {
-          font-family: 'Orbitron', sans-serif; color: #00F0FF; font-size: 1.2rem;
+          font-family: 'Chakra Petch', sans-serif; color: #00F0FF; font-size: 1.2rem;
           letter-spacing: 2px; margin-bottom: 30px; border-bottom: 1px solid rgba(0, 240, 255, 0.3);
           padding-bottom: 10px; display: inline-block;
         }
@@ -236,7 +236,7 @@ export default function PcBuilderApp({ onBack }) {
         /* Cyber Form */
         .cyber-form-group { margin-bottom: 24px; }
         .cyber-label {
-          display: block; font-family: 'Orbitron', sans-serif; font-size: 0.8rem;
+          display: block; font-family: 'Chakra Petch', sans-serif; font-size: 0.8rem;
           color: #B0B0C0; letter-spacing: 1px; margin-bottom: 8px;
         }
         .cyber-select-wrapper { position: relative; }
@@ -257,7 +257,7 @@ export default function PcBuilderApp({ onBack }) {
         /* Cyber Buttons */
         .cyber-btn-cta {
           width: 100%; background: linear-gradient(45deg, #FF3B00, #FF7B00);
-          border: none; color: #FFF; font-family: 'Orbitron', sans-serif; font-weight: 900; font-style: italic;
+          border: none; color: #FFF; font-family: 'Chakra Petch', sans-serif; font-weight: 900; font-style: italic;
           font-size: 1.2rem; letter-spacing: 2px; padding: 18px; cursor: pointer;
           position: relative; overflow: hidden; transition: all 0.3s;
           box-shadow: 0 0 20px rgba(255, 90, 54, 0.4); text-transform: uppercase;
@@ -275,7 +275,7 @@ export default function PcBuilderApp({ onBack }) {
 
         .cyber-btn-secondary {
           width: 100%; background: transparent; border: 1px solid rgba(255, 255, 255, 0.3);
-          color: #FFF; font-family: 'Orbitron', sans-serif; font-weight: 700;
+          color: #FFF; font-family: 'Chakra Petch', sans-serif; font-weight: 700;
           font-size: 1rem; letter-spacing: 1px; padding: 14px; cursor: pointer;
           transition: all 0.3s;
         }
@@ -293,7 +293,7 @@ export default function PcBuilderApp({ onBack }) {
         .holo-core { width: 150px; height: 150px; filter: drop-shadow(0 0 10px #00F0FF); }
         .holo-core-active { width: 150px; height: 150px; filter: drop-shadow(0 0 20px #FF5A36); }
         
-        .hologram-empty p { font-family: 'Orbitron', sans-serif; color: #00F0FF; letter-spacing: 3px; font-size: 0.9rem; }
+        .hologram-empty p { font-family: 'Chakra Petch', sans-serif; color: #00F0FF; letter-spacing: 3px; font-size: 0.9rem; }
         
         .scan-line {
           position: absolute; top: 0; left: 0; width: 100%; height: 2px;
@@ -303,7 +303,7 @@ export default function PcBuilderApp({ onBack }) {
         @keyframes scan { 0% { top: 10%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 90%; opacity: 0; } }
         
         .glitch-text {
-          font-family: 'Orbitron', sans-serif; color: #FF5A36; letter-spacing: 4px; font-size: 1.1rem;
+          font-family: 'Chakra Petch', sans-serif; color: #FF5A36; letter-spacing: 4px; font-size: 1.1rem;
           animation: glitch 0.2s linear infinite;
         }
         @keyframes glitch { 0% { transform: translate(0); } 20% { transform: translate(-2px, 1px); } 40% { transform: translate(-1px, -1px); } 60% { transform: translate(2px, 1px); } 80% { transform: translate(1px, -1px); } 100% { transform: translate(0); } }
@@ -315,12 +315,12 @@ export default function PcBuilderApp({ onBack }) {
         .result-content { width: 100%; animation: fadeIn 0.5s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: none; } }
         
-        .rank-display h1 { font-family: 'Orbitron', sans-serif; font-size: 4rem; font-weight: 900; margin: 0; text-transform: uppercase; }
+        .rank-display h1 { font-family: 'Chakra Petch', sans-serif; font-size: 4rem; font-weight: 900; margin: 0; text-transform: uppercase; }
         .score-badge {
           display: inline-flex; align-items: center; gap: 10px; background: rgba(0, 0, 0, 0.6);
           border: 1px solid rgba(255,255,255,0.1); padding: 8px 20px; border-radius: 30px; margin-top: 10px;
         }
-        .score-badge span { color: #A0A0B0; font-family: 'Orbitron', sans-serif; font-size: 0.8rem; }
+        .score-badge span { color: #A0A0B0; font-family: 'Chakra Petch', sans-serif; font-size: 0.8rem; }
         .score-badge strong { color: #FFF; font-size: 1.3rem; font-weight: 800; }
 
         .radar-wrapper { width: 100%; height: 280px; margin: 20px 0; }

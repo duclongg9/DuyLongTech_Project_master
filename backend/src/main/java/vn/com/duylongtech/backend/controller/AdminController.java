@@ -23,21 +23,18 @@ public class AdminController {
     private final TransactionLogRepository txRepo;
     private final DeviceComponentRepository componentRepo;
     private final SiteSettingRepository settingRepo;
-    private final StockMovementRepository stockRepo;
-    private final WarehouseRepository warehouseRepo;
-
+    private final ProductOptionRepository optionRepo;
     public AdminController(UserRepository userRepo, ProductRepository productRepo,
                            ShipperWalletRepository walletRepo, TransactionLogRepository txRepo,
                            DeviceComponentRepository componentRepo, SiteSettingRepository settingRepo,
-                           StockMovementRepository stockRepo, WarehouseRepository warehouseRepo) {
+                           ProductOptionRepository optionRepo) {
         this.userRepo = userRepo;
         this.productRepo = productRepo;
         this.walletRepo = walletRepo;
         this.txRepo = txRepo;
         this.componentRepo = componentRepo;
         this.settingRepo = settingRepo;
-        this.stockRepo = stockRepo;
-        this.warehouseRepo = warehouseRepo;
+        this.optionRepo = optionRepo;
     }
 
     // ===== USER MANAGEMENT =====
@@ -70,10 +67,26 @@ public class AdminController {
     @PutMapping("/products/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         return productRepo.findById(id).map(p -> {
+            if (body.containsKey("name")) p.setName(body.get("name").toString());
+            if (body.containsKey("brand")) p.setBrand(body.get("brand").toString());
+            if (body.containsKey("model")) p.setModel(body.get("model").toString());
+            if (body.containsKey("sku")) p.setSku(body.get("sku").toString());
+            if (body.containsKey("condition")) p.setCondition(body.get("condition").toString());
+            
             if (body.containsKey("basePrice")) p.setBasePrice(new BigDecimal(body.get("basePrice").toString()));
-            if (body.containsKey("status")) p.setStatus((String) body.get("status"));
-            if (body.containsKey("quantity")) p.setQuantity(Integer.parseInt(body.get("quantity").toString()));
-            if (body.containsKey("warrantyMonths")) p.setWarrantyMonths(Integer.parseInt(body.get("warrantyMonths").toString()));
+            if (body.containsKey("minPrice")) p.setMinPrice(new BigDecimal(body.get("minPrice").toString()));
+            if (body.containsKey("inStock")) p.setInStock(Boolean.parseBoolean(body.get("inStock").toString()));
+            
+            if (body.containsKey("cpuModel")) p.setCpuModel(body.get("cpuModel").toString());
+            if (body.containsKey("ramAmount")) p.setRamAmount(body.get("ramAmount").toString());
+            if (body.containsKey("storageMain")) p.setStorageMain(body.get("storageMain").toString());
+            if (body.containsKey("displaySize")) p.setDisplaySize(body.get("displaySize").toString());
+            if (body.containsKey("displayRes")) p.setDisplayRes(body.get("displayRes").toString());
+            if (body.containsKey("gpuName")) p.setGpuName(body.get("gpuName").toString());
+            
+            if (body.containsKey("imageUrl")) p.setImageUrl(body.get("imageUrl").toString());
+            if (body.containsKey("description")) p.setDescription(body.get("description").toString());
+            
             productRepo.save(p);
             return ResponseEntity.ok(Map.of("message", "Đã cập nhật sản phẩm #" + id));
         }).orElse(ResponseEntity.notFound().build());
@@ -139,7 +152,7 @@ public class AdminController {
         stats.put("totalUsers", userRepo.count());
         stats.put("totalProducts", productRepo.count());
         stats.put("availableProducts", productRepo.findAll().stream()
-                .filter(p -> "AVAILABLE".equals(p.getStatus())).count());
+                .filter(p -> Boolean.TRUE.equals(p.getInStock())).count());
         stats.put("totalShippers", userRepo.findAll().stream()
                 .filter(u -> "SHIPPER".equals(u.getRole())).count());
         stats.put("pendingBalance", walletRepo.findAll().stream()
@@ -151,8 +164,7 @@ public class AdminController {
     // ===== CRUD PRODUCT =====
     @PostMapping("/products")
     public ResponseEntity<?> createProduct(@RequestBody Product p) {
-        if (p.getStatus() == null) p.setStatus("AVAILABLE");
-        if (p.getWarrantyMonths() == null) p.setWarrantyMonths(12);
+        if (p.getInStock() == null) p.setInStock(true);
         return ResponseEntity.ok(productRepo.save(p));
     }
 
@@ -161,6 +173,28 @@ public class AdminController {
         if (!productRepo.existsById(id)) return ResponseEntity.notFound().build();
         productRepo.deleteById(id);
         return ResponseEntity.ok(Map.of("message", "Đã xoá sản phẩm"));
+    }
+
+    // ===== CRUD PRODUCT OPTIONS =====
+    @GetMapping("/products/{id}/options")
+    public ResponseEntity<?> getProductOptions(@PathVariable Long id) {
+        return productRepo.findById(id).map(p -> ResponseEntity.ok(p.getOptions()))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/products/{id}/options")
+    @org.springframework.transaction.annotation.Transactional
+    public ResponseEntity<?> saveProductOptions(@PathVariable Long id, @RequestBody List<ProductOption> options) {
+        return productRepo.findById(id).map(p -> {
+            optionRepo.deleteAll(p.getOptions());
+            p.getOptions().clear();
+            for (ProductOption opt : options) {
+                opt.setProduct(p);
+                p.getOptions().add(opt);
+            }
+            productRepo.save(p);
+            return ResponseEntity.ok(Map.of("message", "Đã cập nhật tuỳ chọn cho sản phẩm #" + id));
+        }).orElse(ResponseEntity.notFound().build());
     }
 
     // ===== CRUD COMPONENTS (Linh Kiện) =====
@@ -192,81 +226,7 @@ public class AdminController {
         return ResponseEntity.ok(Map.of("message", "Đã xoá linh kiện"));
     }
 
-    // ===== INVENTORY LOGIC (Nhập/Xuất Kho có lưu StockMovement) =====
-    @PostMapping("/inventory/inbound")
-    public ResponseEntity<?> inbound(@RequestBody Map<String, Object> payload) {
-        try {
-            boolean isNewProduct = (Boolean) payload.getOrDefault("isNewProduct", false);
-            Product p;
-            
-            if (isNewProduct) {
-                // Tạo mới sản phẩm hoàn toàn từ Map
-                Map<String, Object> pMap = (Map<String, Object>) payload.get("product");
-                p = new Product();
-                p.setName((String) pMap.get("name"));
-                p.setBrand((String) pMap.get("brand"));
-                p.setCategory(null); // Tạm thời bỏ qua category
-                p.setQuantity(0);
-                p.setStatus("AVAILABLE");
-                if (pMap.containsKey("warrantyMonths")) p.setWarrantyMonths(Integer.parseInt(pMap.get("warrantyMonths").toString()));
-                if (pMap.containsKey("basePrice")) p.setBasePrice(new BigDecimal(pMap.get("basePrice").toString()));
-                p = productRepo.save(p);
-            } else {
-                // Sản phẩm đã tồn tại
-                Long pid = Long.valueOf(payload.get("productId").toString());
-                p = productRepo.findById(pid).orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm"));
-            }
-
-            Warehouse w = warehouseRepo.findById(Long.valueOf(payload.getOrDefault("warehouseId", 1).toString()))
-                                       .orElseThrow(() -> new RuntimeException("Không tìm thấy kho"));
-
-            int qtyChange = Integer.parseInt(payload.get("quantityChange").toString());
-            
-            StockMovement sm = new StockMovement();
-            sm.setProduct(p);
-            sm.setWarehouse(w);
-            sm.setQuantityChange(qtyChange);
-            sm.setItemStatus("AVAILABLE");
-            sm.setReason("PURCHASE");
-            
-            if (payload.containsKey("supplier")) sm.setSupplier((String) payload.get("supplier"));
-            if (payload.containsKey("unitPrice")) sm.setUnitPrice(new BigDecimal(payload.get("unitPrice").toString()));
-            if (payload.containsKey("unitOfMeasure")) sm.setUnitOfMeasure((String) payload.get("unitOfMeasure"));
-            if (payload.containsKey("reason")) sm.setNote((String) payload.get("reason"));
-            if (payload.containsKey("referenceId")) sm.setReferenceId((String) payload.get("referenceId"));
-            
-            sm.setMovementDate(LocalDateTime.now());
-            stockRepo.save(sm);
-            
-            // Cập nhật Product Quantity & Giá Vốn (trung bình nếu cần, tạm thời chỉ lưu last costPrice)
-            p.setQuantity(p.getQuantity() + qtyChange);
-            if (payload.containsKey("unitPrice")) {
-                p.setCostPrice(new BigDecimal(payload.get("unitPrice").toString()));
-            }
-            productRepo.save(p);
-            
-            return ResponseEntity.ok(Map.of("message", "Nhập kho chuẩn WMS thành công!", "product", p));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
-    }
-
-    @PostMapping("/inventory/outbound")
-    public ResponseEntity<?> outbound(@RequestBody StockMovement sm) {
-        sm.setItemStatus("SOLD");
-        sm.setReason("SALE");
-        // Xuất kho -> âm số lượng
-        sm.setQuantityChange(-Math.abs(sm.getQuantityChange())); 
-        sm.setMovementDate(LocalDateTime.now());
-        stockRepo.save(sm);
-        
-        Product p = productRepo.findById(sm.getProduct().getId()).orElse(null);
-        if (p != null) {
-            p.setQuantity(Math.max(0, p.getQuantity() + sm.getQuantityChange()));
-            productRepo.save(p);
-        }
-        return ResponseEntity.ok(Map.of("message", "Xuất kho thành công"));
-    }
+    // INVENTORY REMOVED
 
     // ===== UI SETTINGS (Banners, Headers, Footers) =====
     @GetMapping("/settings")

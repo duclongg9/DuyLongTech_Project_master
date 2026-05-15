@@ -15,7 +15,7 @@ export default function AuthModals({ modal, setModal, doAuth }) {
           <button className="btn btn-cta btn-lg btn-block">ĐĂNG NHẬP</button>
         </form>
         <p className="text-center text-sm mt-2 text-dim">Chưa có tài khoản?{' '}
-          <span style={{ color: 'var(--cta)', cursor: 'pointer', fontWeight: 600 }}
+          <span style={{ color: 'var(--accent)', cursor: 'pointer', fontWeight: 600 }}
             onClick={() => setModal('register')}>Đăng ký ngay</span></p>
       </div>
     </div>
@@ -37,7 +37,7 @@ export default function AuthModals({ modal, setModal, doAuth }) {
           <button className="btn btn-cta btn-lg btn-block">ĐĂNG KÝ</button>
         </form>
         <p className="text-center text-sm mt-2 text-dim">Đã có tài khoản?{' '}
-          <span style={{ color: 'var(--cta)', cursor: 'pointer', fontWeight: 600 }}
+          <span style={{ color: 'var(--accent)', cursor: 'pointer', fontWeight: 600 }}
             onClick={() => setModal('login')}>Đăng nhập</span></p>
       </div>
     </div>

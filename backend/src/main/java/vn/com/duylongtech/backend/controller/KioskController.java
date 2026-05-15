@@ -47,7 +47,10 @@ public class KioskController {
         order.put("orderId", orderId);
         order.put("status", "PENDING");
         order.put("createdAt", LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy")));
-        order.put("source", "KIOSK");
+        // Preserve source from frontend (WEB or KIOSK), default to KIOSK
+        if (!order.containsKey("source") || order.get("source") == null) {
+            order.put("source", "KIOSK");
+        }
 
         // ===== AUTO-CREATE CUSTOMER ACCOUNT =====
         // Kiểm tra xem SĐT đã có tài khoản chưa
@@ -120,6 +123,24 @@ public class KioskController {
     @GetMapping("/orders")
     public ResponseEntity<?> getKioskOrders() {
         return ResponseEntity.ok(kioskOrders);
+    }
+
+    @PostMapping("/order/status")
+    public ResponseEntity<?> updateOrderStatus(@RequestBody Map<String, String> request) {
+        String orderId = request.get("orderId");
+        String newStatus = request.get("status");
+
+        synchronized (kioskOrders) {
+            for (Map<String, Object> order : kioskOrders) {
+                if (String.valueOf(order.get("orderId")).equals(orderId)) {
+                    order.put("status", newStatus);
+                    // Thông báo cho tất cả POS về việc cập nhật trạng thái
+                    messagingTemplate.convertAndSend("/topic/kiosk-orders-update", (Object) order);
+                    return ResponseEntity.ok(Map.of("message", "Đã cập nhật trạng thái đơn hàng " + orderId));
+                }
+            }
+        }
+        return ResponseEntity.status(404).body(Map.of("error", "Không tìm thấy đơn hàng " + orderId));
     }
 
     private String generatePassword() {
