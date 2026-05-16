@@ -2,7 +2,7 @@
 -- Create initial schema for DuyLongTech WMS Project
 
 CREATE TABLE users (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     full_name VARCHAR(255),
@@ -10,17 +10,17 @@ CREATE TABLE users (
     phone VARCHAR(255),
     role VARCHAR(50),
     is_prime_member BOOLEAN DEFAULT FALSE,
-    prime_expiry DATETIME
+    prime_expiry TIMESTAMP
 );
 
 CREATE TABLE categories (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE,
     description TEXT
 );
 
 CREATE TABLE products (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     is_backup_device BOOLEAN DEFAULT FALSE,
     brand VARCHAR(255),
@@ -78,25 +78,25 @@ CREATE TABLE products (
     category_id BIGINT,
     description TEXT,
     image_url VARCHAR(255),
-    created_at DATETIME,
-    updated_at DATETIME,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
     CONSTRAINT fk_product_category FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
 CREATE TABLE orders (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     customer_id BIGINT,
     customer_name VARCHAR(255),
     customer_phone VARCHAR(255),
     shipping_address TEXT,
     total_amount DECIMAL(19, 2),
     status VARCHAR(50),
-    created_at DATETIME,
+    created_at TIMESTAMP,
     CONSTRAINT fk_order_customer FOREIGN KEY (customer_id) REFERENCES users(id)
 );
 
 CREATE TABLE order_items (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     order_id BIGINT,
     product_id BIGINT,
     quantity INT,
@@ -106,14 +106,14 @@ CREATE TABLE order_items (
 );
 
 CREATE TABLE warehouses (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE,
     address TEXT,
     type VARCHAR(50)
 );
 
 CREATE TABLE bin_locations (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     warehouse_id BIGINT NOT NULL,
     bin_code VARCHAR(100) NOT NULL,
     zone_name VARCHAR(255),
@@ -131,7 +131,7 @@ CREATE TABLE bin_locations (
 );
 
 CREATE TABLE product_serials (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     product_id BIGINT NOT NULL,
     serial_number VARCHAR(255) NOT NULL,
     imei VARCHAR(255),
@@ -143,11 +143,11 @@ CREATE TABLE product_serials (
     warranty_start DATE,
     warranty_end DATE,
     sold_to_user_id BIGINT,
-    sold_at DATETIME,
+    sold_at TIMESTAMP,
     sale_order_code VARCHAR(100),
     added_by VARCHAR(255),
-    created_at DATETIME NOT NULL,
-    updated_at DATETIME,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP,
     tech_note TEXT,
     CONSTRAINT fk_serial_product FOREIGN KEY (product_id) REFERENCES products(id),
     CONSTRAINT fk_serial_bin FOREIGN KEY (bin_location_id) REFERENCES bin_locations(id),
@@ -156,7 +156,7 @@ CREATE TABLE product_serials (
 CREATE INDEX idx_ps_serial ON product_serials(serial_number);
 
 CREATE TABLE stock_movements (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     product_id BIGINT NOT NULL,
     warehouse_id BIGINT NOT NULL,
     quantity_change INT NOT NULL,
@@ -168,7 +168,7 @@ CREATE TABLE stock_movements (
     supplier VARCHAR(255),
     unit_price DECIMAL(19, 2),
     unit_of_measure VARCHAR(50),
-    movement_date DATETIME NOT NULL,
+    movement_date TIMESTAMP NOT NULL,
     CONSTRAINT fk_sm_product FOREIGN KEY (product_id) REFERENCES products(id),
     CONSTRAINT fk_sm_warehouse FOREIGN KEY (warehouse_id) REFERENCES warehouses(id)
 );
@@ -177,7 +177,7 @@ CREATE INDEX idx_sm_warehouse ON stock_movements(warehouse_id);
 CREATE INDEX idx_sm_date ON stock_movements(movement_date);
 
 CREATE TABLE device_components (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     product_id BIGINT NOT NULL,
     component_type VARCHAR(50) NOT NULL,
     name VARCHAR(255) NOT NULL,
@@ -190,7 +190,7 @@ CREATE TABLE device_components (
 );
 
 CREATE TABLE rma_tickets (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     rma_code VARCHAR(100) NOT NULL UNIQUE,
     rma_type VARCHAR(50) NOT NULL,
     product_id BIGINT,
@@ -214,41 +214,41 @@ CREATE TABLE rma_tickets (
     is_paid_by_customer BOOLEAN,
     received_by VARCHAR(255),
     technician_note TEXT,
-    received_at DATETIME NOT NULL,
-    updated_at DATETIME,
-    closed_at DATETIME,
+    received_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP,
+    closed_at TIMESTAMP,
     CONSTRAINT fk_rma_product FOREIGN KEY (product_id) REFERENCES products(id),
     CONSTRAINT fk_rma_component FOREIGN KEY (component_id) REFERENCES device_components(id),
     CONSTRAINT fk_rma_customer FOREIGN KEY (customer_id) REFERENCES users(id)
 );
 
 CREATE TABLE sos_tickets (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     customer_id BIGINT NOT NULL,
     backup_device_id BIGINT,
     status VARCHAR(50) NOT NULL,
-    latitude DOUBLE,
-    longitude DOUBLE,
+    latitude DOUBLE PRECISION,
+    longitude DOUBLE PRECISION,
     address TEXT,
-    created_at DATETIME NOT NULL,
+    created_at TIMESTAMP NOT NULL,
     CONSTRAINT fk_sos_customer FOREIGN KEY (customer_id) REFERENCES users(id),
     CONSTRAINT fk_sos_backup FOREIGN KEY (backup_device_id) REFERENCES products(id)
 );
 
 CREATE TABLE shipper_wallets (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL UNIQUE,
     balance DECIMAL(19, 2) NOT NULL DEFAULT 0,
     total_collected DECIMAL(19, 2) NOT NULL DEFAULT 0,
     total_settled DECIMAL(19, 2) NOT NULL DEFAULT 0,
     delivery_count INT DEFAULT 0,
-    last_delivery_at DATETIME,
-    last_settled_at DATETIME,
+    last_delivery_at TIMESTAMP,
+    last_settled_at TIMESTAMP,
     CONSTRAINT fk_wallet_user FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE transaction_logs (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     wallet_id BIGINT NOT NULL,
     type VARCHAR(50) NOT NULL,
     amount DECIMAL(19, 2) NOT NULL,
@@ -258,9 +258,9 @@ CREATE TABLE transaction_logs (
     note TEXT,
     performed_by VARCHAR(255),
     proof_image_url TEXT,
-    latitude DOUBLE,
-    longitude DOUBLE,
-    created_at DATETIME NOT NULL,
+    latitude DOUBLE PRECISION,
+    longitude DOUBLE PRECISION,
+    created_at TIMESTAMP NOT NULL,
     CONSTRAINT fk_log_wallet FOREIGN KEY (wallet_id) REFERENCES shipper_wallets(id)
 );
 
@@ -271,7 +271,7 @@ CREATE TABLE site_settings (
 );
 
 CREATE TABLE tickets (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     ticket_code VARCHAR(100),
     customer_id BIGINT,
     product_id BIGINT,
@@ -279,9 +279,9 @@ CREATE TABLE tickets (
     status VARCHAR(50),
     issue_description TEXT,
     rejected_reason TEXT,
-    appointment_date DATETIME,
-    created_at DATETIME,
-    updated_at DATETIME,
+    appointment_date TIMESTAMP,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
     CONSTRAINT fk_ticket_customer FOREIGN KEY (customer_id) REFERENCES users(id),
     CONSTRAINT fk_ticket_product FOREIGN KEY (product_id) REFERENCES products(id)
 );

@@ -1,15 +1,15 @@
 services:
   db:
-    image: mysql:8.0
+    image: postgres:15
     container_name: duylongtech_db
     environment:
-      MYSQL_DATABASE: duylongtech_db
-      MYSQL_ROOT_PASSWORD: root
+      POSTGRES_DB: duylongtech
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
-      - "3307:3306"
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
-    command: --default-authentication-plugin=mysql_native_password
+      - postgres_data:/var/lib/postgresql/data
 
   backend:
     build:
@@ -19,11 +19,11 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/duylongtech_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
-      - SPRING_FLYWAY_USER=root
-      - SPRING_FLYWAY_PASSWORD=root
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/duylongtech
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_FLYWAY_USER=postgres
+      - SPRING_FLYWAY_PASSWORD=postgres
     volumes:
       - ../backend:/app
       - ~/.m2:/root/.m2
@@ -44,4 +44,4 @@ services:
       - backend
 
 volumes:
-  mysql_data:
+  postgres_data:
