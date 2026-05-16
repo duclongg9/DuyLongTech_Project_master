@@ -1,5 +1,5 @@
 // Base API URL — đổi 1 chỗ này khi deploy
-export const API = 'http://localhost:8080/api'
+export const API = 'https://duylongtech-project-master.onrender.com/api'
 
 // Helpers
 export const apiFetch = (path, opts = {}) =>

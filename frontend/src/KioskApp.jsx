@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-const API = 'http://localhost:8080/api'
+const API = 'https://duylongtech-project-master.onrender.com/api'
 
 const RAM_OPTIONS = [
   { label: '8 GB', value: '8GB', price: 0 },

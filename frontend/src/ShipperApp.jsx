@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import SockJS from 'sockjs-client/dist/sockjs'
 import { Client } from '@stomp/stompjs'
-const API = 'http://localhost:8080/api'
-const WS_URL = 'http://localhost:8080/ws'
+const API = 'https://duylongtech-project-master.onrender.com/api'
+const WS_URL = 'wss://duylongtech-project-master.onrender.com/ws'
 
 /**
  * Canvas Watermark — Chèn GPS + DateTime vào ảnh chụp

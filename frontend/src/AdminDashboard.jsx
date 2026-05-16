@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-const API = 'http://localhost:8080/api'
+const API = 'https://duylongtech-project-master.onrender.com/api'
 
 export default function AdminDashboard({ user, onBack }) {
   const [tab, setTab] = useState('stats')

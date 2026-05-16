@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { fmt } from '../constants'
 
-const API = 'http://localhost:8080/api'
+const API = 'https://duylongtech-project-master.onrender.com/api'
 
 /**
  * CheckoutPage Component

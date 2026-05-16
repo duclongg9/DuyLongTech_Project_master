@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Html5Qrcode } from 'html5-qrcode'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const API = 'http://localhost:8080/api'
+const API = 'https://duylongtech-project-master.onrender.com/api'
 
 const COMP_ICONS = {
   MAINBOARD: '🔲', CPU: '🧠', RAM: '💾', SSD: '💿', GPU: '🎮', BATTERY: '🔋',

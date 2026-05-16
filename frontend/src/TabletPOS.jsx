@@ -2,8 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { Client } from '@stomp/stompjs'
 import SockJS from 'sockjs-client/dist/sockjs'
 
-const WS_URL = 'http://localhost:8080/ws'
-const API = 'http://localhost:8080/api'
+const WS_URL = 'wss://duylongtech-project-master.onrender.com/ws'
+const API = 'https://duylongtech-project-master.onrender.com/api'
 
 /**
  * Hook: Lắng nghe Kiosk Order real-time qua WebSocket STOMP

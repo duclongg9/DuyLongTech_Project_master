@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import Confetti from 'react-confetti';
 
-const API = 'http://localhost:8080/api';
+const API = 'https://duylongtech-project-master.onrender.com/api';
 
 const MOCK_OPTIONS = {
   cpu: ['Intel Core i3-12100F', 'Intel Core i5-12400F', 'Intel Core i7-13700K', 'AMD Ryzen 5 5600X', 'AMD Ryzen 9 7950X3D'],
